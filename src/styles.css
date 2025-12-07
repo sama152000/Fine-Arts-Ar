@@ -1,1 +1,347 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Bootstrap CSS */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* PrimeIcons CSS */
+@import 'primeicons/primeicons.css';
+
+/* Almarai Font */
+@font-face {
+  font-family: 'Almarai' !important;
+  src: url('assets/fonts/Almarai/Almarai-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url('assets/fonts/Almarai/Almarai-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url('assets/fonts/Almarai/Almarai-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Almarai';
+  src: url('assets/fonts/Almarai/Almarai-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+
+
+
+/* Faculty of Fine Arts - Luxor University */
+/* General CSS - Design System */
+/* CSS Variables - Color System */
+:root {
+  /* Faculty Colors */
+  --primary-blue: #2C529D;
+  --primary-red: #CD0001;
+  --primary-white: #FFFFFF;
+  
+  /* Extended Palette */
+  --secondary-blue: #1e3a6f;
+  --light-blue: #4a6bb3;
+  --accent-gold: #D4AF37;
+  --warm-gray: #F5F5F5;
+  --dark-gray: #333333;
+  --text-gray: #666666;
+  --border-light: #E5E5E5;
+  
+  /* Typography */
+  --font-heading: 'Almarai', serif;
+  --font-body: 'Almarai', sans-serif;
+  
+  /* Spacing System - Consistent Padding */
+  --section-padding: 80px 0;
+  --container-padding: 0 20px;
+  --card-padding: 24px;
+  --element-spacing: 16px;
+  
+  /* Border Radius */
+  --radius-small: 4px;
+  --radius-medium: 8px;
+  --radius-large: 12px;
+  
+  /* Shadows */
+  --shadow-light: 0 2px 8px rgba(0,0,0,0.1);
+  --shadow-medium: 0 4px 16px rgba(0,0,0,0.15);
+  --shadow-heavy: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+/* Global Reset & Base Styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  line-height: 1.6;
+  color: var(--dark-gray);
+  background-color: var(--primary-white);
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--element-spacing);
+  color: var(--primary-blue);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.75rem; }
+h4 { font-size: 1.5rem; }
+h5 { font-size: 1.25rem; }
+h6 { font-size: 1.125rem; }
+
+p {
+  margin-bottom: var(--element-spacing);
+  line-height: 1.7;
+  color: var(--text-gray);
+}
+
+/* Consistent Container & Padding System */
+.container-fluid {
+  padding-left: 10rem;
+  padding-right: 10rem;
+}
+
+.container {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.section-padding {
+  padding: var(--section-padding);
+}
+
+.content-padding {
+  padding: var(--card-padding);
+}
+
+/* Artistic Frame Styles */
+.artistic-frame {
+  border: 3px solid var(--accent-gold);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--shadow-medium);
+  position: relative;
+  overflow: hidden;
+}
+
+.artistic-frame::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--accent-gold), var(--primary-blue));
+  border-radius: var(--radius-medium);
+  z-index: -1;
+}
+
+/* Button Styles */
+.btn-primary-custom {
+  background-color: var(--primary-red);
+  border-color: var(--primary-red);
+  color: var(--primary-white);
+  font-weight: 500;
+  padding: 12px 32px;
+  border-radius: var(--radius-medium);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary-custom:hover {
+  background-color: #a80001;
+  border-color: #a80001;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-secondary-custom {
+  background-color: transparent;
+  border: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
+  font-weight: 500;
+  padding: 12px 32px;
+  border-radius: var(--radius-medium);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-custom:hover {
+  background-color: var(--primary-blue);
+  color: var(--primary-white);
+}
+
+/* Card Styles */
+.art-card {
+  background: var(--primary-white);
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-light);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-light);
+}
+
+.art-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-heavy);
+}
+
+.art-card-image {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
+
+.art-card:hover .art-card-image {
+  transform: scale(1.05);
+}
+
+.art-card-content {
+  padding: var(--card-padding);
+}
+
+/* Artistic Background Textures */
+.canvas-texture {
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255,255,255,0.3) 1px, transparent 0);
+  background-size: 20px 20px;
+}
+
+.brush-stroke::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  border-radius: 2px;
+}
+
+/* Icon Styles */
+.art-icon {
+  font-size: 2.5rem;
+  color: var(--primary-blue);
+  margin-bottom: var(--element-spacing);
+}
+
+/* Navigation Styles */
+.nav-link-custom {
+  color: var(--dark-gray);
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-small);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-link-custom:hover {
+  color: var(--primary-blue);
+  background-color: rgba(44, 82, 157, 0.1);
+}
+
+.nav-link-custom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--primary-red);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link-custom:hover::after {
+  width: 100%;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.75rem; }
+  h3 { font-size: 1.5rem; }
+  
+  .container-fluid,
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  :root {
+    --section-padding: 60px 0;
+    --card-padding: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 { font-size: 1.75rem; }
+  h2 { font-size: 1.5rem; }
+  
+  .container-fluid,
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  
+  :root {
+    --section-padding: 40px 0;
+  }
+}
+
+/* Animation Utilities */
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.slide-up {
+  transform: translateY(30px);
+  opacity: 0;
+  animation: slideUp 0.8s ease forwards;
+}
+
+@keyframes slideUp {
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Utility Classes */
+.text-primary-blue { color: var(--primary-blue); }
+.text-primary-red { color: var(--primary-red); }
+.text-accent-gold { color: var(--accent-gold); }
+.bg-primary-blue { background-color: var(--primary-blue); }
+.bg-primary-red { background-color: var(--primary-red); }
+.bg-warm-gray { background-color: var(--warm-gray); }
+
+.border-accent { border-color: var(--accent-gold); }
+.shadow-custom { box-shadow: var(--shadow-medium); }
+
+.position-relative { position: relative; }
+.overflow-hidden { overflow: hidden; }
