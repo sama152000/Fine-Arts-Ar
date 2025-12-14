@@ -1,3 +1,54 @@
-<p>
-  hero works!
-</p>
+<section class="hero-section position-relative overflow-hidden">
+  <div class="hero-slider">
+    <!-- Slides -->
+    <div *ngFor="let slide of heroContent.slides; let i = index" 
+         class="hero-slide"
+         [class.active]="i === currentSlideIndex"
+         [style.background-image]="'url(' + slide.imageUrl + ')'">
+      
+      <!-- Overlay -->
+      <div class="hero-overlay"></div>
+      
+      <!-- Content -->
+      <div class="hero-content container-fluid h-100">
+        <div class="row h-100 align-items-center justify-content-center">
+          <div class="col-lg-8 text-center">
+            <div class="hero-text" [class.animate]="i === currentSlideIndex">
+              <h1 class="hero-title mb-3">{{ slide.title }}</h1>
+              <h2 *ngIf="slide.subtitle" class="hero-subtitle mb-4">{{ slide.subtitle }}</h2>
+              <p class="hero-description mb-4">{{ slide.description }}</p>
+              <a [href]="slide.ctaUrl" class="btn btn-primary-custom btn-lg">
+                {{ slide.ctaText }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Arrows -->
+  <button class="hero-nav hero-prev" (click)="prevSlide()">
+    <i class="pi pi-chevron-left"></i>
+  </button>
+  <button class="hero-nav hero-next" (click)="nextSlide()">
+    <i class="pi pi-chevron-right"></i>
+  </button>
+
+  <!-- Artistic Indicators (Brush Icons) -->
+  <div class="hero-indicators">
+    <button 
+      *ngFor="let slide of heroContent.slides; let i = index"
+      class="indicator-brush"
+      [class.active]="i === currentSlideIndex"
+      (click)="goToSlide(i)">
+      <i class="pi pi-circle-fill"></i>
+    </button>
+  </div>
+
+  <!-- Artistic Decoration -->
+  <div class="artistic-decoration">
+    <div class="brush-stroke brush-stroke-1"></div>
+    <div class="brush-stroke brush-stroke-2"></div>
+  </div>
+</section>

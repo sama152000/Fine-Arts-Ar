@@ -1,0 +1,227 @@
+.news-section {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 1) 0%,
+    rgba(245, 245, 245, 0.8) 50%,
+    rgba(255, 255, 255, 1) 100%);
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+}
+
+.section-description {
+  font-size: 1.1rem;
+  color: var(--text-gray);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.news-card {
+  position: relative;
+  transition: all 0.3s ease;
+  /* border: 1px solid var(--border-light); */
+  background: white;
+  overflow: hidden;
+}
+
+.news-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-heavy);
+}
+
+.news-card.featured {
+  /* border: 2px solid var(--accent-gold); */
+  background: linear-gradient(135deg, 
+    rgba(212, 175, 55, 0.05) 0%,
+    rgba(255, 255, 255, 1) 50%,
+    rgba(212, 175, 55, 0.05) 100%);
+}
+
+.featured-badge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: linear-gradient(135deg, var(--accent-gold), #b8941f);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  z-index: 2;
+  box-shadow: var(--shadow-light);
+}
+
+.news-image-container {
+  position: relative;
+  height: 200px;
+}
+
+.category-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.badge-news {
+  background: rgba(44, 82, 157, 0.9);
+  color: white;
+}
+
+.badge-achievement {
+  background: rgba(205, 0, 1, 0.9);
+  color: white;
+}
+
+.badge-announcement {
+  background: rgba(212, 175, 55, 0.9);
+  color: white;
+}
+
+.badge-default {
+  background: rgba(102, 102, 102, 0.9);
+  color: white;
+}
+
+.date-badge {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--dark-gray);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  z-index: 2;
+  box-shadow: var(--shadow-light);
+}
+
+.news-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.news-title a {
+  color: var(--primary-blue);
+  transition: color 0.3s ease;
+}
+
+.news-title a:hover {
+  color: var(--primary-red);
+}
+
+.news-summary {
+  color: var(--text-gray);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  text-align: justify;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  border-top: 1px solid var(--border-light);
+  padding-top: 12px;
+}
+
+.card-actions .btn {
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary {
+  border-color: var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: rgb(255, 255, 255);
+  transform: translateY(-2px);
+}
+
+/* Hover Effects */
+.news-card:hover .art-card-image {
+  transform: scale(1.1);
+}
+
+.news-card:hover .news-title a {
+  color: var(--primary-red);
+}
+
+.news-card:hover .category-badge {
+  transform: scale(1.05);
+}
+
+@media (max-width: 1200px) {
+  .col-xl-3 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .news-image-container {
+    height: 180px;
+  }
+  
+  .category-badge,
+  .featured-badge {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+  
+  .date-badge {
+    font-size: 0.65rem;
+  }
+  
+  .col-lg-6 {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 576px) {
+  .section-title {
+    font-size: 1.75rem;
+  }
+
+  .news-title {
+    font-size: 1.1rem;
+  }
+
+  .news-summary {
+    font-size: 0.85rem;
+  }
+
+  /* Ensure one card per row on mobile */
+  .col-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

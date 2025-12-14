@@ -1,3 +1,92 @@
-<p>
-  header works!
-</p>
+<!-- Top Navigation Bar -->
+<div class="top-nav bg-light py-2" dir="rtl">
+  <div class="top-bar ">
+  <div class="container">
+    <div class="row align-items-center py-2">
+      <div class="col-md-8">
+        <div class="contact-info d-flex flex-wrap gap-3">
+          <span class="text-primary-custom">
+            <i class="fa fa-phone me-2"></i>+20 88-1234567
+          </span>
+          <span class="text-primary-custom">
+            <i class="fa fa-envelope me-2"></i>info@fine.arts.edu.eg
+          </span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="top-links d-flex justify-content-start align-items-center gap-3">
+        
+          <a class="btn btn-sm btn-outline-secondary btn-sm"  href="https://fine-arts-ar.vercel.app/" >
+English
+          </a>        </div>
+      </div>
+    </div>
+  <!-- </div>
+</div> -->
+
+
+      <!-- Language Switch -->
+      <!-- <div class="language-switch">
+        <div class="dropdown">
+          <button 
+            class="btn btn-sm btn-outline-secondary dropdown-toggle" 
+            type="button" 
+            data-bs-toggle="dropdown">
+            {{ currentLanguage.flag }} {{ currentLanguage.label }}
+          </button>
+          <ul class="dropdown-menu">
+            <li *ngFor="let lang of languageOptions">
+              <a 
+                class="dropdown-item" 
+                href="#" 
+                (click)="switchLanguage(lang)">
+                {{ lang.flag }} {{ lang.label }}
+              </a>
+            </li>
+          </ul>
+        </div> -->
+      <!-- </div> -->
+    </div>
+  </div>
+</div>
+
+<!-- Main Navigation -->
+<nav class="main-nav navbar navbar-expand-lg navbar-light bg-white shadow-sm" dir="rtl">
+  <div class="container-fluid">
+    <!-- Faculty Logo -->
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <div class="logo-container me-3">
+        <div class="logo-placeholder bg-primary-blue text-white d-flex align-items-center justify-content-center">
+          <!-- <i class="pi pi-palette" style="font-size: 2rem;"></i> -->
+           <img src="/assets/logo.png" alt="Faculty of Fine Arts Logo" style="width: 100%; height: 100%; object-fit: contain;">
+        </div>
+      </div>
+      <div class="brand-text">
+        <h4 class="mb-0 text-primary-blue">كلية الفنون الجميلة</h4>
+        <small class="text-muted">جامعة الاقصر </small>
+      </div>
+    </a>
+
+    <!-- Mobile Menu Toggle -->
+    <button 
+      class="navbar-toggler" 
+      type="button" 
+      (click)="toggleMobileMenu()">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navigation Menu -->
+    <div class="collapse navbar-collapse" [class.show]="isMobileMenuOpen">
+      <ul class="navbar-nav me-auto">
+        <li *ngFor="let item of menuItems" class="nav-item">
+          <a 
+            class="nav-link nav-link-custom" 
+            [href]="item.url"
+            [class.active]="item.active">
+            {{ item.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

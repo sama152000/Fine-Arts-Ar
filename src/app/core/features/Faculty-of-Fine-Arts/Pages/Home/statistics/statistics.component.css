@@ -1,0 +1,382 @@
+.statistics-section {
+  background: linear-gradient(135deg, 
+    rgba(44, 82, 157, 0.05) 0%,
+    rgba(255, 255, 255, 1) 30%,
+    rgba(212, 175, 55, 0.05) 70%,
+    rgba(255, 255, 255, 1) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+}
+
+.section-description {
+  font-size: 1.1rem;
+  color: var(--text-gray);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.stat-frame {
+  
+  border-radius: var(--radius-large);
+  padding: 32px 24px;
+  position: relative;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.stat-frame:hover {
+  transform: translateY(-8px);
+
+}
+
+.stat-frame::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    var(--primary-blue), 
+    var(--primary-blue), 
+    var(--primary-blue), 
+    var(--primary-blue));
+  border-radius: var(--radius-large);
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.stat-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.stat-icon-container {
+  position: relative;
+}
+
+.stat-icon-wrapper {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary-red), var(--primary-red));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-medium);
+  transition: all 0.3s ease;
+}
+
+.stat-frame:hover .stat-icon-wrapper {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, var(--primary-red), var(--accent-gold));
+}
+
+.stat-icon {
+  font-size: 2rem;
+  color: white;
+}
+
+.stat-number-container {
+  margin: 16px 0;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.849);
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.stat-prefix,
+.stat-suffix {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+}
+
+.stat-frame:hover .stat-number {
+  color: white;
+  transform: scale(1.05);
+}
+
+.stat-label {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-description {
+  font-size: 0.85rem;
+  color: white;
+  line-height: 1.4;
+  margin-bottom: 0;
+}
+
+.frame-decoration {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+}
+
+.decoration-line {
+  height: 2px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    var(--accent-gold), 
+    transparent);
+  border-radius: 1px;
+}
+/* 
+.frame-corners {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.corner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--primary-blue);
+}
+
+.corner-tl {
+  top: 8px;
+  left: 8px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.corner-tr {
+  top: 8px;
+  right: 8px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.corner-bl {
+  bottom: 8px;
+  left: 8px;
+  border-right: none;
+  border-top: none;
+}
+
+.corner-br {
+  bottom: 8px;
+  right: 8px;
+  border-left: none;
+  border-top: none;
+} */
+
+.achievement-banner {
+  background: linear-gradient(135deg, 
+    var(--primary-blue) 0%,
+    var(--light-blue) 50%,
+    var(--primary-blue) 100%);
+  color: white;
+  padding: 48px 32px;
+  border-radius: var(--radius-large);
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, 
+    rgba(255,255,255,0.1) 0%, 
+    transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+.achievement-content {
+  position: relative;
+  z-index: 1;
+}
+
+.achievement-title {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.achievement-description {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  max-width: 700px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+
+.achievement-badges {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.achievement-badge {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.artistic-background-elements {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bg-element {
+  position: absolute;
+  background: rgba(212, 175, 55, 0.1);
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-gold);
+  font-size: 2.5rem;
+  animation: float 10s ease-in-out infinite;
+  opacity: 0.5;
+}
+
+.element-palette {
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.element-brush {
+  top: 50%;
+  right: 3%;
+  animation-delay: 3s;
+}
+
+.element-frame {
+  bottom: 15%;
+  left: 8%;
+  animation-delay: 6s;
+}
+
+@media (max-width: 992px) {
+  .col-lg-3 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .stat-frame {
+    height: 250px;
+    padding: 24px 16px;
+    margin-bottom: 20px;
+  }
+  
+  .stat-icon-wrapper {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .stat-icon {
+    font-size: 1.8rem;
+  }
+  
+  .stat-number {
+    font-size: 2.5rem;
+  }
+  
+  .achievement-title {
+    font-size: 1.75rem;
+  }
+  
+  .achievement-description {
+    font-size: 1rem;
+  }
+  
+  .bg-element {
+    width: 100px;
+    height: 100px;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .col-md-6 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .stat-frame {
+    height: 220px;
+    margin-bottom: 16px;
+  }
+  
+  .stat-number {
+    font-size: 2.2rem;
+  }
+  
+  .achievement-banner {
+    padding: 32px 20px;
+  }
+  
+  .achievement-title {
+    font-size: 1.5rem;
+  }
+  
+  .achievement-badges {
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,3 +1,70 @@
-<p>
-  statistics works!
-</p>
+<section class="statistics-section section-padding canvas-texture">
+  <div class="container-fluid">
+    <!-- Section Header -->
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <h2 class="section-title position-relative brush-stroke">
+          احصائيات الكلية
+          <i class="pi pi-chart-bar art-icon"></i>
+        </h2>
+        <p class="section-description">
+اكتشف الأرقام المميزة التي تُبرز التزامنا بالتميّز الفني وجودة التعليم
+        </p>
+      </div>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="row">
+      <div class="col-lg-3 col-md-6 mb-4" 
+           *ngFor="let stat of statistics; let i = index">
+        
+        <div class="stat-frame artistic-frame fade-in" 
+             [style.animation-delay]="(i * 0.1) + 's'">
+          
+          <!-- Frame Content -->
+          <div class="stat-content text-center">
+            
+            <!-- Icon -->
+            <!-- <div class="stat-icon-container mb-3">
+              <div class="stat-icon-wrapper">
+                <i [class]="stat.icon + ' stat-icon'"></i>
+              </div>
+            </div> -->
+
+            <!-- Number with Animation -->
+            <div class="stat-number-container mb-2">
+              <span class="stat-prefix" *ngIf="stat.prefix">{{ stat.prefix }}</span>
+              <span 
+                class="stat-number" 
+                [attr.data-stat-id]="stat.id">0</span>
+              <span class="stat-suffix" *ngIf="stat.suffix">{{ stat.suffix }}</span>
+            </div>
+
+            <!-- Label -->
+            <h5 class="stat-label mb-2">{{ stat.label }}</h5>
+
+            <!-- Description -->
+            <p class="stat-description" *ngIf="stat.description">
+              {{ stat.description }}
+            </p>
+
+            <!-- Decorative Elements -->
+            <div class="frame-decoration">
+              <div class="decoration-line"></div>
+            </div>
+          </div>
+
+          <!-- Frame Corners -->
+          <div class="frame-corners">
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+  </div>
+</section>

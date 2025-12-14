@@ -1,3 +1,89 @@
-<p>
-  news works!
-</p>
+<section class="news-section section-padding">
+  <div class="container-fluid">
+    <!-- Section Header -->
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <h2 class="section-title position-relative brush-stroke">
+          اخر الاخبار
+          <i class="pi pi-megaphone art-icon"></i>
+        </h2>
+        <p class="section-description">
+ابقَ على اطلاع بآخر المستجدات والإنجازات والإعلانات الصادرة عن كليتنا
+        </p>
+      </div>
+    </div>
+
+    <!-- News Grid -->
+    <div class="row">
+      <div class="col-12 col-md-6 col-lg-6 col-xl-3 mb-4" *ngFor="let news of newsItems; let i = index">
+        <article class="news-card art-card h-100 fade-in" 
+                 [style.animation-delay]="(i * 0.1) + 's'"
+                 [class.featured]="news.featured">
+          
+          <!-- Featured Badge -->
+          <!-- <div class="featured-badge" *ngIf="news.featured">
+            <i class="pi pi-star"></i>
+           مميز
+          </div> -->
+
+          <!-- News Image -->
+          <div class="news-image-container position-relative overflow-hidden">
+            <img 
+              [src]="news.imageUrl" 
+              [alt]="news.title"
+              class="art-card-image">
+            
+            <!-- Category Badge -->
+            <!-- <div class="category-badge" [class]="getCategoryClass(news.category)">
+              <i [class]="getCategoryIcon(news.category)" class="me-1"></i>
+              {{ news.category | titlecase }}
+            </div> -->
+
+            <!-- Date Badge -->
+            <div class="date-badge">
+              <i class="pi pi-calendar me-1"></i>
+              {{ formatDate(news.publishDate) }}
+            </div>
+          </div>
+
+          <!-- Card Content -->
+          <div class="art-card-content">
+            <h4 class="news-title mb-3">
+              <a [href]="news.readMoreUrl" class="text-decoration-none">
+                {{ news.title }}
+              </a>
+            </h4>
+            
+            <p class="news-summary mb-3">
+              {{ news.summary }}
+            </p>
+
+            <!-- Author Info -->
+            <div class="author-info mb-3" *ngIf="news.author">
+              <i class="pi pi-user me-2 text-primary-blue"></i>
+              <small class="text-muted">بواسطة {{ news.author }}</small>
+            </div>
+
+            <!-- Read More Button -->
+            <div class="card-actions mt-auto">
+              <a [href]="news.readMoreUrl" class="btn btn-outline-primary w-100">
+                قراءة المزيد
+                <i class="pi pi-arrow-left me-2"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- View All News Button -->
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <a href="/news-list" class="btn btn-primary-custom btn-lg">
+          <i class="pi pi-list me-2"></i>
+         عرض كل الاخبار 
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

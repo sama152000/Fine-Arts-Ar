@@ -1,3 +1,112 @@
-<p>
-  footer works!
-</p>
+<footer class="footer-section">
+  <!-- Main Footer Content -->
+  <div class="footer-main">
+    <div class="container-fluid">
+      <div class="row" *ngIf="footerData">
+        
+        <!-- Logo & About Column -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="footer-column">
+            
+            <!-- Logo -->
+            <div class="footer-logo mb-3 ">
+              <div class="logo-container d-flex align-items-center gap-3">
+                <div class="logo-icon">
+                  <img src="/assets/logo.png" alt="Faculty of Fine Arts Logo" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                <div class="brand-text ">
+                  <h4 class="mb-0">كلية الفنون الجميلة</h4>
+                  <small>جامعة الاقصر</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Description -->
+            <p class="footer-description mb-4">
+              {{ footerData.description }}
+            </p>
+
+            <!-- Social Media Links -->
+            
+          </div>
+        </div>
+
+        <!-- Important Links Columns -->
+        <div class="col-lg-2 col-md-3 col-6 mb-4" 
+             *ngFor="let section of footerData.sections">
+          <div class="footer-column">
+            <h6 class="footer-column-title mb-3">{{ section.title }}</h6>
+            <ul class="footer-links">
+              <li *ngFor="let link of section.links" class="footer-link-item">
+                <a [href]="link.url" class="footer-link">
+                  {{ link.label }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Contact Information Column -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="footer-column">
+            <h6 class="footer-column-title mb-3">معلومات الاتصال</h6>
+            
+            <div class="contact-info">
+              <!-- Address -->
+              <div class="contact-item mb-3">
+                <div class="contact-icon">
+                  <i class="pi pi-map-marker"></i>
+                </div>
+                <div class="contact-text">
+                  <strong>العنوان:</strong><br>
+                  {{ footerData.contactInfo.address }}
+                </div>
+              </div>
+
+              <!-- Phone -->
+              <div class="contact-item mb-3">
+                <div class="contact-icon">
+                  <i class="pi pi-phone"></i>
+                </div>
+                <div class="contact-text">
+                  <strong>الهاتف:</strong><br>
+                  <a [href]="'tel:' + footerData.contactInfo.phone" class="contact-link">
+                    {{ footerData.contactInfo.phone }}
+                  </a>
+                </div>
+              </div>
+
+           
+
+              <!-- Working Hours -->
+              <div class="contact-item mb-3">
+               
+              
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Copyright Bar -->
+  <div class="footer-copyright">
+    <div class="container-fluid">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <p class="copyright-text mb-0" *ngIf="footerData">
+            {{ footerData.copyrightText }}
+          </p>
+        </div>
+        <div class="col-md-4 text-md-end">
+          <div class="footer-badges">
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ 
+</footer>

@@ -1,3 +1,86 @@
-<p>
-  about works!
-</p>
+<section class="about-section section-padding position-relative">
+  <!-- Artistic Background -->
+  <div class="artistic-background"></div>
+  
+  <div class="container-fluid" *ngIf="aboutData">
+    <div class="row align-items-center">
+      <!-- Text Content -->
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <div class="about-text slide-up">
+          <h2 class="section-title mb-4 position-relative brush-stroke">
+            {{ aboutData.title }}
+          </h2>
+          
+          <p class="about-description mb-4">
+            {{ aboutData.description }}
+          </p>
+
+          <!-- Highlights
+          <div class="highlights-list mb-4">
+            <div class="row">
+              <div *ngFor="let highlight of aboutData.highlights" class="col-12 mb-2">
+                <div class="highlight-item d-flex align-items-center">
+                  <i class="pi pi-check-circle text-primary-red me-3"></i>
+                  <span>{{ highlight }}</span>
+                </div>
+              </div>
+            </div>
+          </div> -->
+
+          <!-- Vision & Mission -->
+          <div class="vision-mission" *ngIf="aboutData.vision || aboutData.mission">
+            <div class="row">
+              <div class="col-md-6 mb-3" *ngIf="aboutData.vision">
+                <div class="vm-card">
+                  <h5 class="text-primary-blue mb-2">
+                    <i class="pi pi-eye me-2 p-1"></i>رؤيتنا
+                  </h5>
+                  <p class="small">{{ aboutData.vision }}</p>
+                </div>
+              </div>
+              <div class="col-md-6 mb-3" *ngIf="aboutData.mission">
+                <div class="vm-card">
+                  <h5 class="text-primary-blue mb-2">
+                    <i class="pi pi-flag me-2 p-1"></i>رسالتنا
+                  </h5>
+                  <p class="small">{{ aboutData.mission }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Established Year -->
+         
+        </div>
+      </div>
+
+      <!-- Image Section -->
+      <div class="col-lg-6">
+        <div class="about-image-container fade-in">
+          <div class="artistic-frame">
+            <img 
+              [src]="aboutData.imageUrl" 
+              [alt]="aboutData.title"
+              class="about-image img-fluid">
+          </div>
+          
+          <!-- Decorative Elements
+          <div class="decorative-elements">
+            <div class="palette-icon">
+              <i class="pi pi-palette"></i>
+            </div>
+            <div class="brush-icon">
+              <i class="pi pi-pencil"></i>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Artistic Decorations -->
+  <div class="section-decorations">
+    <div class="paint-splash paint-splash-1"></div>
+    <div class="paint-splash paint-splash-2"></div>
+  </div>
+</section>

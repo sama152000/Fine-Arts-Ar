@@ -1,3 +1,129 @@
-<p>
-  events works!
-</p>
+<section class="events-section section-padding bg-warm-gray">
+  <div class="container-fluid">
+    <!-- Section Header -->
+    <div class="row">
+      <div class="col-12 text-center mb-5">
+        <h2 class="section-title position-relative brush-stroke">
+          <i class="pi pi-calendar art-icon"></i>
+         الفاعليات القادمة
+        </h2>
+        <p class="section-description">
+انضم إلينا في معارض وورش عمل وندوات وفعاليات ثقافية مميزة تُبرز المواهب الفنية والإبداع
+        </p>
+      </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class="row">
+      <div class="col-lg-6 mb-4" *ngFor="let event of events; let i = index">
+        <div class="event-card art-card h-100 fade-in" 
+             [style.animation-delay]="(i * 0.1) + 's'"
+             [class.featured]="event.featured">
+          
+          <div class="row g-0 h-100">
+            <!-- Event Image -->
+            <div class="col-md-5">
+              <div class="event-image-container position-relative overflow-hidden h-100">
+                <img 
+                  [src]="event.imageUrl" 
+                  [alt]="event.title"
+                  class="event-image">
+                
+                <!-- Category Badge -->
+                <!-- <div class="category-badge" [class]="getCategoryClass(event.category)">
+                  <i [class]="getCategoryIcon(event.category)" class="me-1"></i>
+                  {{ event.category | titlecase }}
+                </div> -->
+
+                <!-- Featured Badge -->
+                <!-- <div class="featured-badge" *ngIf="event.featured">
+                  <i class="pi pi-star"></i>
+                  Featured
+                </div> -->
+
+                <!-- Days Until Event -->
+                <div class="countdown-badge" *ngIf="getDaysUntilEvent(event.eventDate) > 0">
+                  <div class="countdown-number">{{ getDaysUntilEvent(event.eventDate) }}</div>
+                  <div class="countdown-text">{{ getDaysUntilEvent(event.eventDate) === 1 ? 'Day' : 'Days' }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Event Content -->
+            <div class="col-md-7">
+              <div class="event-content h-100 d-flex flex-column">
+                
+                <!-- Event Header -->
+                <div class="event-header mb-3">
+                  <h4 class="event-title mb-2">
+                    {{ event.title }}
+                  </h4>
+                  
+                  <!-- Date & Time -->
+                  <div class="event-datetime mb-2">
+                    <div class="datetime-item">
+                      <i class="pi pi-calendar me-2 text-primary-blue"></i>
+                      <span>{{ formatDate(event.eventDate) }}</span>
+                    </div>
+                    <div class="datetime-item">
+                      <i class="pi pi-clock me-2 text-primary-blue"></i>
+                      <span>{{ event.startTime }}</span>
+                      <span *ngIf="event.endTime"> - {{ event.endTime }}</span>
+                    </div>
+                  </div>
+
+                  <!-- Location -->
+                  <div class="event-location mb-3">
+                    <i class="pi pi-map-marker me-2 text-primary-red"></i>
+                    <span>{{ event.location }}</span>
+                  </div>
+                </div>
+
+                <!-- Event Description -->
+                <p class="event-description mb-3">
+                  {{ event.summary }}
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="event-actions mt-auto">
+                  <div class="d-grid gap-2 d-md-block">
+                    <a [href]="event.registrationUrl" 
+                       class="btn btn-primary-custom me-2 mb-2"
+                       *ngIf="event.registrationUrl">
+                      <i class="pi pi-user-plus me-2"></i>
+                     الاشتراك الان
+                    </a>
+                    <a [href]="event.readMoreUrl" class="btn btn-secondary-custom mb-2">
+                      <i class="pi pi-info-circle me-2"></i>
+                      عرض التفاصيل
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- View All Events -->
+    <div class="row mt-4">
+      <div class="col-12 text-center">
+        <a routerLink="/news-list" class="btn btn-primary-custom btn-lg">
+          <i class="pi pi-calendar me-2"></i>
+         عرض كل الفاعليات
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Artistic Elements -->
+  <!-- <div class="floating-art-elements">
+    <div class="art-element element-brush">
+      <i class="pi pi-palette"></i>
+    </div>
+    <div class="art-element element-frame">
+      <i class="pi pi-image"></i>
+    </div>
+  </div> -->
+</section>
