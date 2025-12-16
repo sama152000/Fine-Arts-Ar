@@ -31,7 +31,7 @@ export class NavigationService {
       { label: 'القطاعات', url: '/sectors' },
       { label: 'الوحدات والمراكز', url: '/units' },
       { label: 'الأخبار', url: '/news-list' },
-      { label: 'خدمات الطلاب', url: '/student-services' },
+      // { label: 'خدمات الطلاب', url: '/student-services' },
       { label: 'اتصل بنا', url: '/contact' }
     ];
   }

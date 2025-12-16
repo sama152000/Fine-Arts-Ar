@@ -1,3 +1,256 @@
-<p>
-  contact works!
-</p>
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Page Header -->
+      <div class="page-header mb-4">
+        <h2 class="text-primary-blue">
+          <i class="pi pi-phone me-2"></i>
+          تواصل معنا
+        </h2>
+        <p class="text-muted">تواصل مع كلية الفنون الجميلة - جامعة الأقصر</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- Contact Information -->
+    <div class="col-lg-4 col-md-5 mb-4">
+      <div class="contact-sidebar art-card">
+        <div class="sidebar-header content-padding">
+          <h5 class="text-primary-blue mb-0">
+            <i class="pi pi-info-circle me-2"></i>
+            معلومات التواصل
+          </h5>
+        </div>
+        <div class="contact-info content-padding" *ngIf="contactInfo">
+          
+          <!-- Phone -->
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="pi pi-phone"></i>
+            </div>
+            <div class="contact-details">
+              <h6 class="contact-label">رقم الهاتف</h6>
+              <p class="contact-value">{{ contactInfo.phone }}</p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="pi pi-envelope"></i>
+            </div>
+            <div class="contact-details">
+              <h6 class="contact-label">البريد الإلكتروني</h6>
+              <p class="contact-value">
+                <a [href]="'mailto:' + contactInfo.email">{{ contactInfo.email }}</a>
+              </p>
+            </div>
+          </div>
+
+          <!-- Address -->
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="pi pi-map-marker"></i>
+            </div>
+            <div class="contact-details">
+              <h6 class="contact-label">العنوان</h6>
+              <p class="contact-value">{{ contactInfo.address }}</p>
+            </div>
+          </div>
+
+          <!-- Office Hours -->
+          <div class="contact-item">
+            <div class="contact-icon">
+              <i class="pi pi-clock"></i>
+            </div>
+            <div class="contact-details">
+              <h6 class="contact-label">ساعات العمل</h6>
+              <p class="contact-value">{{ contactInfo.officeHours }}</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Additional Information -->
+        <div class="additional-info content-padding border-top">
+          <h6 class="text-primary-blue mb-3">روابط سريعة</h6>
+          <div class="quick-links">
+            <div class="quick-link-item">
+              <i class="pi pi-graduation-cap me-2"></i>
+              <span>مكتب القبول</span>
+            </div>
+            <div class="quick-link-item">
+              <i class="pi pi-book me-2"></i>
+              <span>الشؤون الأكاديمية</span>
+            </div>
+            <div class="quick-link-item">
+              <i class="pi pi-users me-2"></i>
+              <span>خدمات الطلاب</span>
+            </div>
+            <div class="quick-link-item">
+              <i class="pi pi-building me-2"></i>
+              <span>مكاتب الأقسام</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="col-lg-8 col-md-7">
+      <div class="contact-form art-card">
+        <div class="form-header content-padding">
+          <h4 class="text-primary-blue mb-2">أرسل لنا رسالة</h4>
+          <p class="text-muted">يسعدنا سماعك. املأ النموذج أدناه وسنقوم بالرد عليك في أقرب وقت ممكن.</p>
+        </div>
+
+        <div class="form-content content-padding border-top">
+          <!-- Success Message -->
+          <div *ngIf="submitSuccess" class="alert alert-success" role="alert">
+            <i class="pi pi-check-circle me-2"></i>
+            <strong>شكرًا لك!</strong> تم إرسال رسالتك بنجاح. سنقوم بالرد عليك قريبًا.
+          </div>
+
+          <!-- Error Message -->
+          <div *ngIf="submitError" class="alert alert-danger" role="alert">
+            <i class="pi pi-exclamation-triangle me-2"></i>
+            <strong>خطأ!</strong> حدثت مشكلة أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى.
+          </div>
+
+          <form (ngSubmit)="onSubmit()" #contactForm="ngForm">
+            <div class="row">
+              <!-- Name Field -->
+              <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">
+                  <i class="pi pi-user me-1"></i>
+                  الاسم الكامل *
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="name"
+                  name="name"
+                  [(ngModel)]="contactMessage.name"
+                  required
+                  placeholder="أدخل اسمك الكامل"
+                  [class.is-invalid]="contactMessage.name === '' && contactForm.submitted">
+                <div class="invalid-feedback">
+                  يرجى إدخال الاسم الكامل.
+                </div>
+              </div>
+
+              <!-- Email Field -->
+              <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">
+                  <i class="pi pi-envelope me-1"></i>
+                  البريد الإلكتروني *
+                </label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  name="email"
+                  [(ngModel)]="contactMessage.email"
+                  required
+                  email
+                  placeholder="أدخل بريدك الإلكتروني"
+                  [class.is-invalid]="(!isValidEmail(contactMessage.email) || contactMessage.email === '') && contactForm.submitted">
+                <div class="invalid-feedback">
+                  يرجى إدخال بريد إلكتروني صالح.
+                </div>
+              </div>
+            </div>
+
+            <!-- Subject Field -->
+            <div class="mb-3">
+              <label for="subject" class="form-label">
+                <i class="pi pi-tag me-1"></i>
+                الموضوع *
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="subject"
+                name="subject"
+                [(ngModel)]="contactMessage.subject"
+                required
+                placeholder="وصف مختصر لاستفسارك"
+                [class.is-invalid]="contactMessage.subject === '' && contactForm.submitted">
+              <div class="invalid-feedback">
+                يرجى إدخال موضوع الرسالة.
+              </div>
+            </div>
+
+            <!-- Message Field -->
+            <div class="mb-4">
+              <label for="message" class="form-label">
+                <i class="pi pi-comment me-1"></i>
+                الرسالة *
+              </label>
+              <textarea
+                class="form-control"
+                id="message"
+                name="message"
+                [(ngModel)]="contactMessage.message"
+                required
+                rows="6"
+                placeholder="يرجى كتابة تفاصيل استفسارك..."
+                [class.is-invalid]="contactMessage.message === '' && contactForm.submitted"></textarea>
+              <div class="invalid-feedback">
+                يرجى كتابة الرسالة.
+              </div>
+              <div class="form-text">
+                <small class="text-muted">
+                  <i class="pi pi-info-circle me-1"></i>
+                  يرجى تقديم أكبر قدر من التفاصيل لمساعدتنا في خدمتك بشكل أفضل.
+                </small>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="btn btn-primary-custom"
+                [disabled]="isSubmitting">
+                <span *ngIf="isSubmitting">
+                  <i class="pi pi-spin pi-spinner me-2"></i>
+                  جاري الإرسال...
+                </span>
+                <span *ngIf="!isSubmitting">
+                  <i class="pi pi-send me-2"></i>
+                  إرسال الرسالة
+                </span>
+              </button>
+              
+              <button
+                type="button"
+                class="btn btn-secondary-custom ms-3"
+                (click)="resetForm()"
+                [disabled]="isSubmitting">
+                <i class="pi pi-refresh me-2"></i>
+                إعادة تعيين النموذج
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Map Section (Optional) -->
+      <div class="map-section art-card mt-4">
+        <div class="map-header content-padding">
+          <h5 class="text-primary-blue mb-0">
+            <i class="pi pi-map me-2"></i>
+            الموقع
+          </h5>
+        </div>
+        <div class="map-placeholder">
+          <div class="map-content">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3595.363920556198!2d32.6350701!3d25.692372199999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1449142931ac707b%3A0x6a4052af8e69e174!2z2YPZhNmK2Kkg2KfZhNmB2YbZiNmGINin2YTYrNmF2YrZhNipINis2KfZhdi52Kkg2KfZhNij2YLYtdix!5e0!3m2!1sar!2seg!4v1765128959112!5m2!1sar!2seg" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

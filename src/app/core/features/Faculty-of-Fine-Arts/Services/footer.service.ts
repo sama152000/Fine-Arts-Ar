@@ -17,14 +17,13 @@ export class FooterService {
             { label: 'الرئيسية', url: '/' },
             { label: 'عن الكلية', url: '/about' },
             { label: 'الأقسام الأكاديمية', url: '/departments' },
-            { label: 'الأخبار', url: '/news-list' },
             { label: 'اتصل بنا', url: '/contact' }
           ]
         },
         {
           title: 'روابط سريعة',
           links: [
-            { label: 'الخدمات', url: '/student-services' },
+            // { label: 'الخدمات', url: '/student-services' },
             { label: 'الأخبار', url: '/news-list' },
             { label: 'الوحدات والمراكز', url: '/units' },
             { label: 'الأقسام الأكاديمية', url: '/departments' }

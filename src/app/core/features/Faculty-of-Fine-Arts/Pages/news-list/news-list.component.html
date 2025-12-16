@@ -1,3 +1,79 @@
-<p>
-  news-list works!
-</p>
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <!-- Page Header -->
+      <div class="page-header mb-4">
+        <h2 class="text-primary-blue">
+          <i class="pi pi-newspaper me-2"></i>
+          أخبار وتحديثات الكلية
+        </h2>
+        <p class="text-muted">تابع آخر الأخبار والفعاليات والإعلانات من كلية الفنون الجميلة</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="news-tabs mb-4">
+        <div class="tabs-container">
+          <div *ngFor="let tab of tabs" 
+               class="tab-item"
+               [class.active]="activeTab === tab.id"
+               (click)="selectTab(tab.id)">
+            <i [class]="tab.icon" class="me-2"></i>
+            {{ tab.label }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <div class="row">
+          <div class="col-lg-4 col-md-6 mb-4" *ngFor="let item of filteredContent">
+            <div class="content-card art-card h-100">
+              <div class="card-image-container">
+                <img [src]="item.imageUrl" 
+                     [alt]="item.title"
+                     class="art-card-image">
+                <div class="category-badge" [ngClass]="'badge-' + item.category">
+                  {{ item.category | titlecase }}
+                </div>
+                <div class="date-overlay">
+                  {{ formatDate(item.publishDate) }}
+                </div>
+              </div>
+              
+              <div class="art-card-content">
+                <h5 class="card-title text-primary-blue mb-2">{{ item.title }}</h5>
+                <p class="card-summary text-muted mb-3">{{ item.summary }}</p>
+                
+                <div class="card-meta mb-3">
+                  <span class="author-info" *ngIf="item.author">
+                    <i class="pi pi-user me-1"></i>
+                    {{ item.author }}
+                  </span>
+                  <span class="event-date" *ngIf="isEventItem(item)">
+                    <i class="pi pi-calendar me-1"></i>
+                    {{ formatDate(item.eventDate) }}
+                  </span>
+                </div>
+                
+                <div class="card-actions">
+                  <button class="btn btn-primary-custom btn-sm"
+                          (click)="navigateToDetails(item)">
+                          عرض التفاصيل
+                          <i class="pi pi-arrow-left me-1 p-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="filteredContent.length === 0" class="empty-state text-center py-5">
+          <i class="pi pi-info-circle text-muted" style="font-size: 3rem;"></i>
+          <h4 class="text-muted mt-3">لا يوجد محتوى</h4>
+          <p class="text-muted">لا توجد عناصر في هذه الفئة حاليًا.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
