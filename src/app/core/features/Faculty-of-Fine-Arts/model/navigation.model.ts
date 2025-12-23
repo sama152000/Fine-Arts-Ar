@@ -1,4 +1,5 @@
 export interface MenuItem {
+  id?: string;
   label: string;
   url: string;
   active?: boolean;
@@ -7,6 +8,7 @@ export interface MenuItem {
 }
 
 export interface DropdownItem {
+  id?: string; 
   label: string;
   url: string;
   icon?: string;

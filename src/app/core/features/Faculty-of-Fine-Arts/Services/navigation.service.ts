@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { MenuItem, SocialLink, LanguageOption } from '../model/navigation.model';
-import { Department } from '../model/department.model';
-import { AboutSection } from '../model/about.model';
+import { MenuItem,DropdownItem } from '../model/navigation.model';
 import { DepartmentService } from './department.service';
 import { AboutService } from './about.service';
+import { SectorsService } from './sectors.service';
+import { UnitsService } from './units.service';
+import { StudentServicesService } from './student-services.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,45 +14,92 @@ export class NavigationService {
   
   constructor(
     private departmentService: DepartmentService,
-    private aboutService: AboutService
+    private aboutService: AboutService,
+    private sectorService: SectorsService,
+    private unitService: UnitsService,
+        private studentServicesService: StudentServicesService
+
   ) {}
 
   getMainMenuItems(): MenuItem[] {
     return [
-      { label: 'الرئيسية', url: '/', active: true },
-      { 
-        label: 'عن الكلية', 
+      { id: 'home', label: 'الرئيسية', url: '/', active: true },
+      {
+        id: 'about',
+        label: 'عن الكلية',
         url: '/about',
         dropdownItems: this.getAboutDropdownItems()
       },
-      { 
-        label: 'الأقسام الأكاديمية', 
+      {
+        id: 'departments',
+        label: 'الأقسام الأكاديمية',
         url: '/departments',
-        dropdownItems: this.getDepartmentDropdownItems()
+        dropdownItems: this.getDepartments()
       },
-      { label: 'القطاعات', url: '/sectors' },
-      { label: 'الوحدات والمراكز', url: '/units' },
-      { label: 'الأخبار', url: '/news-list' },
-      // { label: 'خدمات الطلاب', url: '/student-services' },
-      { label: 'اتصل بنا', url: '/contact' }
+      {
+        id: 'sectors',
+        label: 'القطاعات',
+        url: '/sectors',
+        dropdownItems: this.getSectorDropdownItems()
+      },
+      {
+        id: 'units',
+        label: 'الوحدات والمراكز',
+        url: '/units',
+        dropdownItems: this.getUnitDropdownItems()
+      },
+      { id: 'news', label: 'الأخبار', url: '/news-list' },
+      { id: 'student-services', label: 'خدمات الطلاب', url: '/student-services' ,dropdownItems :this.getservicesItems()},
+      { id: 'contact', label: 'اتصل بنا', url: '/contact' }
     ];
   }
 
-  private getDepartmentDropdownItems() {
-    const departments = this.departmentService.getDepartments();
-    return departments.map(dept => ({
-      label: dept.name, // تمت ترجمة أسماء الأقسام داخل الـ DepartmentService بالفعل
-      url: `/departments/${dept.id}`,
-      icon: dept.icon
+
+  private getservicesItems(): DropdownItem[] {
+    const services = this.studentServicesService.getStudentServices();
+    return services.map(service => ({
+      id: service.id.toString(),
+      label: service.name,
+      url: `/student-services/${service.id}`,
+      icon: service.icon
     }));
   }
+
+private getDepartments() {
+  const departments = this.departmentService.getDepartments();
+  return departments.map(dept => ({
+    id: dept.id,  
+    label: dept.name,
+    url: `/departments/${dept.id}`,
+    icon: dept.icon
+  }));
+}
+
 
   private getAboutDropdownItems() {
     const sections = this.aboutService.getAboutSections();
     return sections.map(section => ({
-      label: section.title, // تمت ترجمة العناوين داخل AboutService
+      label: section.title,
       url: `/about/${section.id}`,
       icon: section.icon
+    }));
+  }
+
+  private getSectorDropdownItems() {
+    const sectors = this.sectorService.getSectors();
+    return sectors.map(sec => ({
+      label: sec.name,
+      url: `/sectors/${sec.id}`,
+      icon: sec.icon
+    }));
+  }
+
+  private getUnitDropdownItems() {
+    const units = this.unitService.getUnits();
+    return units.map(unit => ({
+      label: unit.name,
+      url: `/units/${unit.id}`,
+      icon: unit.icon
     }));
   }
 }

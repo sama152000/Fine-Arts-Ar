@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StudentServicesService } from '../../Services/student-services.service';
@@ -20,13 +20,14 @@ export class StudentServicesComponent implements OnInit {
     { id: 'overview', label: 'نيذه عامة', icon: 'pi pi-info-circle', active: true },
     { id: 'vision-mission', label: 'الروية & الرسالة', icon: 'pi pi-eye', active: false },
     { id: 'head', label: 'رئيس الخدمة', icon: 'pi pi-user', active: false },
-    { id: 'staff', label: 'اعضائ هيئة التدريس', icon: 'pi pi-users', active: false }
+    { id: 'staff', label: 'اعضاء هيئة التدريس', icon: 'pi pi-users', active: false }
   ];
 
   constructor(
     private studentServicesService: StudentServicesService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -51,6 +52,7 @@ export class StudentServicesComponent implements OnInit {
   selectTab(tabId: string) {
     this.activeTab = tabId;
     this.tabs.forEach(tab => tab.active = tab.id === tabId);
+    this.cdr.detectChanges();
   }
 
   getUniquePositions(): string[] {

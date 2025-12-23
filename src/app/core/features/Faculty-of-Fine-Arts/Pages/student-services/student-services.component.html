@@ -75,7 +75,7 @@
                 <div class="col-md-12">
                   <h4 class="text-primary-blue mb-3">نظرة عامة على الخدمة</h4>
                   <p class="lead mb-4">{{ selectedService.description }}</p>
-                  
+
                   <h5 class="text-primary-blue mb-3">الخدمات المتاحة</h5>
                   <div class="row mb-4" *ngIf="selectedService.services">
                     <div class="col-md-6" *ngFor="let service of selectedService.services">
@@ -116,22 +116,8 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="col-md-4">
-                  <!-- Requirements Card -->
-                  <!-- <div class="requirements-card mt-4" *ngIf="selectedService.requirements?.length">
-                    <h6 class="text-primary-blue mb-3">
-                      <i class="pi pi-list me-2"></i>المتطلبات
-                    </h6>
-                    <ul class="requirements-list">
-                      <li *ngFor="let requirement of selectedService.requirements">
-                        {{ requirement }}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </div>
-            </div> -->
+            </div>
 
             <!-- Vision & Mission Tab -->
             <div *ngSwitchCase="'vision-mission'" class="tab-pane content-padding">
@@ -262,4 +248,3 @@
       </div>
     </div>
   </div>
-</div>

@@ -20,7 +20,7 @@ export class UnitsComponent implements OnInit {
     { id: 'overview', label: 'نبذة عامة', icon: 'pi pi-info-circle', active: true },
     { id: 'vision-mission', label: 'الرؤية & الرسالة', icon: 'pi pi-eye', active: false },
     { id: 'head', label: 'رئيس الوحدة', icon: 'pi pi-user', active: false },
-    // { id: 'staff', label: 'Staff Members', icon: 'pi pi-users', active: true }
+    { id: 'staff', label: 'اعضاء هيئه التدريس ', icon: 'pi pi-users', active: false }
   ];
 
   constructor(

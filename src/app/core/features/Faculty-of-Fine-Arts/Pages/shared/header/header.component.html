@@ -5,11 +5,11 @@
     <div class="row align-items-center py-2">
       <div class="col-md-8">
         <div class="contact-info d-flex flex-wrap gap-3">
-          <span class="text-primary-custom">
-            <i class="fa fa-phone me-2"></i>+20 88-1234567
+          <span class="text-primary-custom gap-3">
+            <i class="fa fa-phone me-2 ms-1"></i>+20 88-1234567
           </span>
           <span class="text-primary-custom">
-            <i class="fa fa-envelope me-2"></i>info@fine.arts.edu.eg
+            <i class="fa fa-envelope me-2 ms-1"></i>info@fine.arts.edu.eg
           </span>
         </div>
       </div>
@@ -76,17 +76,45 @@ English
     </button>
 
     <!-- Navigation Menu -->
-    <div class="collapse navbar-collapse" [class.show]="isMobileMenuOpen">
-      <ul class="navbar-nav me-auto">
-        <li *ngFor="let item of menuItems" class="nav-item">
-          <a 
-            class="nav-link nav-link-custom" 
-            [href]="item.url"
-            [class.active]="item.active">
-            {{ item.label }}
-          </a>
-        </li>
-      </ul>
-    </div>
+  <!-- Navigation Menu -->
+<div class="collapse navbar-collapse" [class.show]="isMobileMenuOpen">
+  <ul class="navbar-nav me-auto">
+    <li *ngFor="let item of menuItems" class="nav-item dropdown" [class.active]="item.active">
+      
+      <!-- لو فيه dropdownItems -->
+      <ng-container *ngIf="(item.dropdownItems || []).length > 0; else normalLink">
+      <a
+  class="nav-link nav-link-custom dropdown-toggle"
+  href="#"
+  id="{{item.id || item.label}}Dropdown"  
+  role="button"
+  data-bs-toggle="dropdown"
+  aria-expanded="false"
+  appBootstrapDropdown>
+  {{ item.label }}
+</a>
+
+<ul class="dropdown-menu" aria-labelledby="{{item.id || item.label}}Dropdown">
+  <li *ngFor="let child of item.dropdownItems">
+    <a class="dropdown-item" [href]="child.url">
+      <i *ngIf="child.icon" [class]="child.icon"></i> {{ child.label }}
+    </a>
+  </li>
+</ul>
+
+      </ng-container>
+
+      <!-- لو مفيش dropdown -->
+      <ng-template #normalLink>
+        <a 
+          class="nav-link nav-link-custom" 
+          [href]="item.url">
+          {{ item.label }}
+        </a>
+      </ng-template>
+    </li>
+  </ul>
+</div>
+  
   </div>
 </nav>
