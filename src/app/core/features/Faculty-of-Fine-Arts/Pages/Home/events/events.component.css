@@ -25,7 +25,8 @@
   background: white;
   border-radius: var(--radius-large);
   overflow: hidden;
-  min-height: 300px;
+  min-height: 200px;
+  max-height: 300px;
 }
 
 .event-card:hover {

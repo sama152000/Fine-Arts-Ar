@@ -1,47 +1,54 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { NewsService } from '../../../Services/news.service';
-import { NewsItem } from '../../../model/news.model';
+import { Post } from '../../../model/news.model'; // الموديل الجديد اللي يطابق الـ API
 
 @Component({
   selector: 'app-news',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './news.component.html',
   styleUrls: ['./news.component.css']
 })
 export class NewsComponent implements OnInit {
-  newsItems: NewsItem[] = [];
+  newsItems: Post[] = [];
 
   constructor(private newsService: NewsService) {}
 
   ngOnInit() {
-    this.newsItems = this.newsService.getAllNews().slice(0, 4);
+    // تحميل الأخبار من الـ API
+    this.newsService.getPosts().subscribe(res => {
+      if (res.success) {
+        // عرض أول 4 أخبار فقط
+        this.newsItems = res.data.slice(0, 4);
+      }
+    });
   }
 
-  getCategoryClass(category: string): string {
+  getCategoryClass(category: string | undefined): string {
     switch (category) {
-      case 'news': return 'badge-news';
-      case 'achievement': return 'badge-achievement';
-      case 'announcement': return 'badge-announcement';
+      case 'الأخبار': return 'badge-news';
+      case 'الاحداث': return 'badge-event';
+      case 'المؤتمرات': return 'badge-announcement';
       default: return 'badge-default';
     }
   }
 
-  getCategoryIcon(category: string): string {
+  getCategoryIcon(category: string | undefined): string {
     switch (category) {
-      case 'news': return 'pi pi-megaphone';
-      case 'achievement': return 'pi pi-star';
-      case 'announcement': return 'pi pi-bell';
+      case 'الأخبار': return 'pi pi-megaphone';
+      case 'الاحداث': return 'pi pi-calendar';
+      case 'المؤتمرات': return 'pi pi-bell';
       default: return 'pi pi-info';
     }
   }
 
-  formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('en-US', {
+  formatDate(date: string): string {
+    return new Intl.DateTimeFormat('ar-EG', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    }).format(date);
+    }).format(new Date(date));
   }
 }

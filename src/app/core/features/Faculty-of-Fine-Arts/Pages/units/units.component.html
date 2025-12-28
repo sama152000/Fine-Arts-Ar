@@ -6,7 +6,7 @@
         <div class="sidebar-header content-padding">
           <h5 class="text-primary-blue mb-0">
             <i class="pi pi-building me-2"></i>
-            الوحدات والمراكز
+            الوحدات
           </h5>
         </div>
         <div class="sidebar-content">
@@ -16,11 +16,13 @@
                (click)="selectUnit(unit)">
             <div class="department-info">
               <div class="department-icon">
-                <i [class]="unit.icon"></i>
+                <i class="pi pi-building"></i>
               </div>
               <div class="department-details">
-                <h6 class="department-name">{{ unit.name }}</h6>
-                <small class="text-muted">{{ unit.staffMembers.length }} عضو هيئة تدريس</small>
+                <!-- اسم الوحدة من الـ API -->
+                <h6 class="department-name">{{ unit.unitTitle }}</h6>
+                <!-- عدد الأعضاء من unitMembers -->
+             
               </div>
             </div>
           </div>
@@ -38,11 +40,13 @@
             <div class="col-md-8">
               <div class="d-flex align-items-center mb-3 gap-3">
                 <div class="department-icon-large me-3">
-                  <i [class]="selectedUnit.icon"></i>
+                  <i class="pi pi-building"></i>
                 </div>
                 <div>
-                  <h2 class="text-primary-blue mb-1">{{ selectedUnit.name }}</h2>
-                  <p class="text-muted mb-0">تأسس عام {{ selectedUnit.establishedYear }}</p>
+                  <!-- اسم الوحدة -->
+                  <h2 class="text-primary-blue mb-1">{{ selectedUnit.unitTitle }}</h2>
+                  <!-- الاسم الإنجليزي -->
+                  <p class="text-muted mb-0">{{ selectedUnit.unitTitleEn }}</p>
                 </div>
               </div>
             </div>
@@ -71,30 +75,8 @@
 
             <!-- Overview Tab -->
             <div *ngSwitchCase="'overview'" class="tab-pane content-padding">
-              <div class="row">
-                <div class="col-md-12">
-                  <h4 class="text-primary-blue mb-3">نظرة عامة على الوحدة</h4>
-                  <p class="lead mb-4">{{ selectedUnit.description }}</p>
-
-                  <h5 class="text-primary-blue mb-3">الخدمات</h5>
-                  <div class="row mb-4" *ngIf="selectedUnit.services">
-                    <div class="col-md-6" *ngFor="let service of selectedUnit.services">
-                      <div class="program-card">
-                        <i class="pi pi-check-circle text-accent-gold me-2 p-1"></i>
-                        <span>{{ service }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <h5 class="text-primary-blue mb-3" *ngIf="selectedUnit.facilities?.length">المرافق</h5>
-                  <div class="divisions-list mb-4" *ngIf="selectedUnit.facilities?.length">
-                    <div *ngFor="let facility of selectedUnit.facilities" class="division-item">
-                      <i class="pi pi-angle-right text-primary-blue me-2"></i>
-                      {{ facility }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <h4 class="text-primary-blue mb-3">نظرة عامة على الوحدة</h4>
+              <p class="lead mb-4">{{ selectedUnit.content }}</p>
             </div>
 
             <!-- Vision & Mission Tab -->
@@ -123,10 +105,10 @@
                   <i class="pi pi-flag me-2"></i>أهداف الوحدة
                 </h4>
                 <div class="objectives-list">
-                  <div *ngFor="let objective of selectedUnit.objectives; let i = index"
+                  <div *ngFor="let goal of selectedUnit.goals; let i = index"
                        class="objective-item">
                     <div class="objective-number">{{ i + 1 }}</div>
-                    <div class="objective-text">{{ objective }}</div>
+                    <div class="objective-text">{{ goal.goalName }}</div>
                   </div>
                 </div>
               </div>
@@ -134,50 +116,35 @@
 
             <!-- Head of Unit Tab -->
             <div *ngSwitchCase="'head'" class="tab-pane content-padding">
-              <div class="head-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-user me-2 p-1"></i>قيادة الوحدة
-                </h4>
-
-                <div class="head-profile">
-                  <div class="row align-items-center">
-                    <div class="col-md-3">
-                      <div class="head-image-placeholder">
-                        <i class="pi pi-user"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-9">
-                      <h5 class="text-primary-blue mb-2">{{ selectedUnit.headOfUnit.name }}</h5>
-                      <p class="text-muted mb-2">{{ selectedUnit.headOfUnit.title }}</p>
-                      <p class="mb-2"><strong>الدرجة العلمية:</strong> {{ selectedUnit.headOfUnit.academicRank }}</p>
-                      <p class="mb-2"><strong>التخصص:</strong> {{ selectedUnit.headOfUnit.specialization }}</p>
-                      <p class="mb-2" *ngIf="selectedUnit.headOfUnit.email">
-                        <strong>البريد الإلكتروني:</strong>
-                        <a [href]="'mailto:' + selectedUnit.headOfUnit.email">
-                          {{ selectedUnit.headOfUnit.email }}
-                        </a>
-                      </p>
-                      <p class="mb-3" *ngIf="selectedUnit.headOfUnit.office">
-                        <strong>المكتب:</strong> {{ selectedUnit.headOfUnit.office }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div *ngIf="selectedUnit.headOfUnit.bio" class="head-bio mt-4">
-                    <h6 class="text-primary-blue mb-2">السيرة الذاتية</h6>
-                    <p>{{ selectedUnit.headOfUnit.bio }}</p>
-                  </div>
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-user me-2 p-1"></i>قيادة الوحدة
+              </h4>
+              <div *ngIf="getUnitLeader() as leader" class="staff-card">
+                <div class="staff-avatar">
+                  <i class="pi pi-user"></i>
+                </div>
+                <div class="staff-info">
+                  <h6 class="staff-name">{{ leader.memberName }}</h6>
+                  <p class="staff-specialization">رئيس الوحدة</p>
                 </div>
               </div>
             </div>
 
-            <!-- Staff Summary -->
-            <div class="staff-summary mt-4">
+            <!-- Staff Tab -->
+            <div *ngSwitchCase="'staff'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-users me-2 p-1"></i>أعضاء الوحدة
+              </h4>
               <div class="row">
-                <div class="col-md-6" *ngFor="let division of getUniqueDivisions()">
-                  <div class="division-summary">
-                    <h6 class="text-primary-blue">{{ division }}</h6>
-                    <p class="text-muted">{{ getStaffByDivision(division).length }} عضو هيئة تدريس</p>
+                <div class="col-md-6 col-lg-4 mb-3" *ngFor="let member of getUnitStaff()">
+                  <div class="staff-card">
+                    <div class="staff-avatar">
+                      <i class="pi pi-user"></i>
+                    </div>
+                    <div class="staff-info">
+                      <h6 class="staff-name">{{ member.memberName }}</h6>
+                      <p class="staff-specialization">عضو</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -191,7 +158,7 @@
       <div *ngIf="!selectedUnit" class="no-selection art-card content-padding text-center">
         <i class="pi pi-building text-muted" style="font-size: 4rem;"></i>
         <h4 class="text-muted mt-3">اختر وحدة</h4>
-        <p class="text-muted">اختر وحدة أو مركزًا من القائمة الجانبية لعرض تفاصيله.</p>
+        <p class="text-muted">اختر وحدة من القائمة الجانبية لعرض تفاصيلها.</p>
       </div>
     </div>
   </div>

@@ -8,7 +8,8 @@
           <i class="pi pi-building art-icon"></i>
         </h2>
         <p class="section-description">
-استكشف أقسامنا الأكاديمية المتنوعة، حيث يكرّس كل قسم جهوده لتعزيز الإبداع والتميز الفني       </p>
+          استكشف أقسامنا الأكاديمية المتنوعة، حيث يكرّس كل قسم جهوده لتعزيز الإبداع والتميز الفني
+        </p>
       </div>
     </div>
 
@@ -21,47 +22,29 @@
           <!-- Department Image -->
           <div class="card-image-container position-relative overflow-hidden">
             <img 
-              [src]="department.imageUrl" 
-              [alt]="department.name"
+              [src]="department.departmentAttachments?.[0]?.url || 'assets/images/placeholder.png'" 
+              [alt]="department.pageTitle"
               class="art-card-image">
             
             <!-- Overlay with Icon -->
             <div class="image-overlay d-flex align-items-center justify-content-center">
-              <i [class]="department.icon" class="department-icon"></i>
-            </div>
-            
-            <!-- Student Count Badge -->
-            <div class="student-badge" *ngIf="department.studentCount">
-              <i class="pi pi-users me-1"></i>
-              {{ department.studentCount }} الطلاب
+              <i class="pi pi-building department-icon"></i>
             </div>
           </div>
 
           <!-- Card Content -->
           <div class="art-card-content">
             <h4 class="department-name mb-3">
-              {{ department.name }}
+              {{ department.pageTitle }}
             </h4>
             
             <p class="department-description mb-3">
-              {{ department.description }}
+              {{ department.about }}
             </p>
-
-            <!-- Programs Offered -->
-            <!-- <div class="programs-section mb-3" *ngIf="department.programsOffered">
-              <h6 class="programs-title mb-2">
-                <i class="pi pi-bookmark me-2"></i>Programs Offered:
-              </h6>
-              <ul class="programs-list">
-                <li *ngFor="let program of department.programsOffered" class="program-item">
-                  {{ program }}
-                </li>
-              </ul>
-            </div> -->
 
             <!-- Action Button -->
             <div class="card-actions mt-auto">
-              <a [href]="department.detailsUrl" class="btn btn-secondary-custom w-100">
+              <a [routerLink]="['/departments', department.id]" class="btn btn-secondary-custom w-100">
                 معرفة المزيد
                 <i class="pi pi-arrow-left me-2"></i>
               </a>
@@ -70,38 +53,5 @@
         </div>
       </div>
     </div>
-
-    <!-- Call to Action -->
-    <!-- <div class="row mt-5">
-      <div class="col-12 text-center">
-        <div class="cta-section">
-          <h3 class="cta-title mb-3">Ready to Start Your Artistic Journey?</h3>
-          <p class="cta-description mb-4">
-            Join one of our departments and unlock your creative potential with expert guidance
-          </p>
-          <a href="/admission" class="btn btn-primary-custom btn-lg me-3 mb-2">
-            <i class="pi pi-user-plus me-2"></i>
-            Apply Now
-          </a>
-          <a href="/contact" class="btn btn-secondary-custom btn-lg mb-2">
-            <i class="pi pi-phone me-2"></i>
-            Contact Us
-          </a>
-        </div>
-      </div>
-    </div> -->
   </div>
-
-  <!-- Decorative Elements
-  <div class="floating-elements">
-    <div class="floating-element element-1">
-      <i class="pi pi-palette"></i>
-    </div>
-    <div class="floating-element element-2">
-      <i class="pi pi-pencil"></i>
-    </div>
-    <div class="floating-element element-3">
-      <i class="pi pi-image"></i>
-    </div>
-  </div> -->
 </section>

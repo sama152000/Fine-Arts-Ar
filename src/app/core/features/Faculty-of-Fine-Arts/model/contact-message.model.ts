@@ -1,3 +1,4 @@
+// رسالة تواصل من المستخدم
 export interface ContactMessage {
   name: string;
   email: string;
@@ -6,10 +7,19 @@ export interface ContactMessage {
   submittedDate?: Date;
 }
 
+// بيانات التواصل من الـ API
 export interface ContactInfo {
+  id: string;
+  address: string;
   phone: string;
   email: string;
-  address: string;
-  officeHours: string;
-  mapUrl?: string;
+  fax?: string;
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedIn?: string;
+  youTube?: string;
+  whatsApp?: string;
+  webSite?: string;
+  mapLocation?: string;
 }

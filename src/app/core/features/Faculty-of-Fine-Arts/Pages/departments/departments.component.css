@@ -175,6 +175,7 @@
   margin-bottom: 12px;
   border-left: 4px solid var(--accent-gold);
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .program-card:hover {

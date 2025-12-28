@@ -1,4 +1,4 @@
-<div class="container-fluid py-4" *ngIf="contentItem">
+<div class="container-fluid py-4" *ngIf="post">
   <div class="row">
     <!-- Left Sidebar -->
     <div class="col-lg-3 col-md-4">
@@ -10,71 +10,29 @@
           </h5>
         </div>
         <div class="sidebar-content">
-          
           <!-- Navigation Items -->
           <div class="nav-item" (click)="goBack()">
             <div class="nav-info">
-              <div class="nav-icon">
-                <i class="pi pi-arrow-left"></i>
-              </div>
+              <div class="nav-icon"><i class="pi pi-arrow-left"></i></div>
               <div class="nav-details">
                 <h6 class="nav-name">العودة للخلف</h6>
                 <small class="text-muted">الرجوع للصفحة السابقة</small>
               </div>
             </div>
           </div>
-
-          <div class="nav-item" (click)="goToTab('news')">
+          <div class="nav-item" (click)="goToTab(post.postCategories[0]?.categoryName ?? 'الأخبار')">
             <div class="nav-info">
-              <div class="nav-icon">
-                <i class="pi pi-book"></i>
-              </div>
+              <div class="nav-icon"><i class="pi pi-list"></i></div>
               <div class="nav-details">
-                <h6 class="nav-name">الأخبار</h6>
-                <small class="text-muted">آخر أخبار الكلية</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="nav-item" (click)="goToTab('events')">
-            <div class="nav-info">
-              <div class="nav-icon">
-                <i class="pi pi-calendar"></i>
-              </div>
-              <div class="nav-details">
-                <h6 class="nav-name">الفعاليات</h6>
-                <small class="text-muted">الفعاليات القادمة</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="nav-item" (click)="goToTab('announcements')">
-            <div class="nav-info">
-              <div class="nav-icon">
-                <i class="pi pi-megaphone"></i>
-              </div>
-              <div class="nav-details">
-                <h6 class="nav-name">الإعلانات</h6>
-                <small class="text-muted">إعلانات هامة</small>
-              </div>
-            </div>
-          </div>
-
-          <div class="nav-item" (click)="goToTab('articles')">
-            <div class="nav-info">
-              <div class="nav-icon">
-                <i class="pi pi-file-edit"></i>
-              </div>
-              <div class="nav-details">
-                <h6 class="nav-name">المقالات</h6>
-                <small class="text-muted">مقالات أكاديمية</small>
+                <h6 class="nav-name">تصفح المزيد</h6>
+                <small class="text-muted">من نفس الفئة</small>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Related Items Section -->
-        <div class="related-section" *ngIf="relatedItems.length > 0">
+        <div class="related-section" *ngIf="relatedPosts.length > 0">
           <div class="sidebar-header content-padding border-top">
             <h5 class="text-primary-blue mb-0">
               <i class="pi pi-tags me-2"></i>
@@ -82,16 +40,16 @@
             </h5>
           </div>
           <div class="related-content">
-            <div *ngFor="let item of relatedItems" 
+            <div *ngFor="let item of relatedPosts"
                  class="related-item"
                  (click)="navigateToRelated(item)">
               <div class="related-info">
-                <div class="related-icon" [class]="getCategoryColor(item.category)">
-                  <i [class]="getCategoryIcon(item.category)"></i>
+                <div class="related-icon">
+                  <i [class]="getCategoryIcon(item.postCategories[0]?.categoryName ?? 'الأخبار')"></i>
                 </div>
                 <div class="related-details">
                   <h6 class="related-title">{{ item.title }}</h6>
-                  <small class="related-category">{{ item.category | titlecase }}</small>
+                  <small class="related-category">{{ item.postCategories[0]?.categoryName ?? 'الأخبار' }}</small>
                 </div>
               </div>
             </div>
@@ -103,92 +61,51 @@
     <!-- Main Content -->
     <div class="col-lg-9 col-md-8">
       <div class="content-details">
-        
         <!-- Content Header -->
         <div class="content-header art-card mb-4">
-          <div class="header-image-container" *ngIf="contentItem.imageUrl">
-            <img [src]="contentItem.imageUrl" 
-                 [alt]="contentItem.title"
+          <div class="header-image-container" *ngIf="post.featuredImagePath">
+            <img [src]="post.featuredImagePath"
+                 [alt]="post.title"
                  class="header-image">
             <div class="header-overlay">
-              <div class="category-badge" [ngClass]="'badge-' + contentItem.category">
-                <i [class]="getCategoryIcon(contentItem.category)" class="me-2"></i>
-                {{ contentItem.category | titlecase }}
+              <div class="category-badge">
+                <i [class]="getCategoryIcon(post.postCategories[0]?.categoryName ?? 'الأخبار')" class="me-2"></i>
+                {{ post.postCategories[0]?.categoryName ?? 'الأخبار' }}
               </div>
+            </div>
+          </div>
+          <div class="header-content content-padding">
+            <h1 class="content-title text-primary-blue mb-3">{{ post.title }}</h1>
+            <div class="content-meta">
+              <div class="meta-item">
+                <i class="pi pi-calendar me-2"></i>
+                <span>{{ formatDate(post.createdDate) }}</span>
+                
+              </div>
+                <div class="content-padding">
+            <div class="content-text">
+              <div class="formatted-content" [innerHTML]="post.content"></div>
+            </div>
+          <!-- </div> -->
             </div>
           </div>
           
-          <div class="header-content content-padding">
-            <h1 class="content-title text-primary-blue mb-3">{{ contentItem.title }}</h1>
-            
-            <div class="content-meta">
-              <div class="meta-item" *ngIf="contentItem.author">
-                <i class="pi pi-user me-2"></i>
-                <span>{{ contentItem.author }}</span>
-              </div>
-              <div class="meta-item">
-                <i class="pi pi-calendar me-2"></i>
-                <span>{{ formatDate(contentItem.publishDate) }}</span>
-              </div>
-              <div class="meta-item" *ngIf="isEventItem(contentItem)">
-                <i class="pi pi-clock me-2"></i>
-                <span>{{ formatTime(contentItem.startTime) }}
-                  <span *ngIf="contentItem.endTime"> - {{ formatTime(contentItem.endTime) }}</span>
-                </span>
-              </div>
-              <div class="meta-item" *ngIf="isEventItem(contentItem) && contentItem.location">
-                <i class="pi pi-map-marker me-2"></i>
-                <span>{{ contentItem.location }}</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Content Body -->
-        <div class="content-body art-card">
-          <div class="content-padding">
-            <!-- Event Details (if event) -->
-            <div *ngIf="isEventItem(contentItem) && contentItem.eventDate" class="event-details mb-4">
-              <div class="alert alert-info">
-                <h5 class="alert-heading">
-                  <i class="pi pi-info-circle me-2"></i>
-                  معلومات الفعالية
-                </h5>
-                <div class="row">
-                  <div class="col-md-6">
-                    <p class="mb-1"><strong>التاريخ:</strong> {{ formatDate(contentItem.eventDate) }}</p>
-                    <p class="mb-1"><strong>الوقت:</strong> {{ formatTime(contentItem.startTime) }}
-                      <span *ngIf="contentItem.endTime"> - {{ formatTime(contentItem.endTime) }}</span>
-                    </p>
-                  </div>
-                  <div class="col-md-6">
-                    <p class="mb-1"><strong>المكان:</strong> {{ contentItem.location }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Summary -->
-            <div class="content-summary mb-4">
-              <p class="lead">{{ contentItem.summary }}</p>
-            </div>
-
-            <!-- Full Content -->
-            <div class="content-text">
-              <div class="formatted-content" [innerHTML]="contentItem.fullContent"></div>
-            </div>
-          </div>
-        </div>
+        <!-- <div class="content-body art-card">
+        
+        </div> -->
 
         <!-- Action Buttons -->
-        <div class="content-actions mt-4">
+        <div class="content-actions mt-4 mb-4">
           <button class="btn btn-secondary-custom me-3" (click)="goBack()">
             <i class="pi pi-arrow-left me-2"></i>
             العودة للخلف
           </button>
-          <button class="btn btn-primary-custom" (click)="goToTab(contentItem.category)">
+          <button class="btn btn-primary-custom" (click)="goToTab(post.postCategories[0]?.categoryName ?? 'الأخبار')">
             <i class="pi pi-list me-2"></i>
-            تصفح المزيد من {{ contentItem.category | titlecase }}
+            تصفح المزيد من {{ post.postCategories[0]?.categoryName ?? 'الأخبار' }}
           </button>
         </div>
       </div>
@@ -197,7 +114,7 @@
 </div>
 
 <!-- Loading/Error State -->
-<div *ngIf="!contentItem" class="container-fluid py-4">
+<div *ngIf="!post" class="container-fluid py-4">
   <div class="row">
     <div class="col-12">
       <div class="art-card content-padding text-center">

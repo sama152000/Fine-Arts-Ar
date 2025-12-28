@@ -16,11 +16,11 @@
                (click)="selectDepartment(department)">
             <div class="department-info">
               <div class="department-icon">
-                <i [class]="department.icon"></i>
+                <i class="pi pi-building"></i>
               </div>
               <div class="department-details">
-                <h6 class="department-name">{{ department.name }}</h6>
-                <small class="text-muted">{{ department.studentCount }} طالب</small>
+                <h6 class="department-name">{{ department.pageTitle }}</h6>
+                <small class="text-muted">{{ getDepartmentMemberCount(department) }} عضو</small>
               </div>
             </div>
           </div>
@@ -38,11 +38,11 @@
             <div class="col-md-8">
               <div class="d-flex align-items-center mb-3 gap-3">
                 <div class="department-icon-large me-3">
-                  <i [class]="selectedDepartment.icon"></i>
+                  <i class="pi pi-building"></i>
                 </div>
                 <div>
-                  <h2 class="text-primary-blue mb-1">{{ selectedDepartment.name }}</h2>
-                  <p class="text-muted mb-0">تأسس عام {{ selectedDepartment.establishedYear }}</p>
+                  <h2 class="text-primary-blue mb-1">{{ selectedDepartment.pageTitle }}</h2>
+                  <p class="text-muted mb-0">{{ selectedDepartment.subTitle }}</p>
                 </div>
               </div>
             </div>
@@ -71,29 +71,24 @@
 
             <!-- Overview Tab -->
             <div *ngSwitchCase="'overview'" class="tab-pane content-padding">
-              <div class="row">
-                <div class="col-md-12">
-                  <h4 class="text-primary-blue mb-3">نظرة عامة على القسم</h4>
-                  <p class="lead mb-4">{{ selectedDepartment.description }}</p>
+              <h4 class="text-primary-blue mb-3">نظرة عامة على القسم</h4>
+              <p class="lead mb-4">{{ selectedDepartment.about }}</p>
 
-                  <h5 class="text-primary-blue mb-3">البرامج الأكاديمية</h5>
-                  <div class="row mb-4">
-                    <div class="col-md-6" *ngFor="let program of selectedDepartment.programsOffered">
-                      <div class="program-card">
-                        <i class="pi pi-graduation-cap text-accent-gold me-2"></i>
-                        <span>{{ program }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <h5 class="text-primary-blue mb-3" *ngIf="selectedDepartment.divisions?.length">التخصصات</h5>
-                  <div class="divisions-list mb-4" *ngIf="selectedDepartment.divisions?.length">
-                    <div *ngFor="let division of selectedDepartment.divisions" class="division-item">
-                      <i class="pi pi-angle-right text-primary-blue me-2"></i>
-                      {{ division }}
-                    </div>
+              <h5 class="text-primary-blue mb-3">البرامج الأكاديمية</h5>
+              <div class="row mb-4">
+                <div class="col-md-6" *ngFor="let program of getDepartmentProgramsById()">
+                  <div class="program-card" [routerLink]="['/programs', program.id]">
+                    <i class="pi pi-graduation-cap text-accent-gold me-2"></i>
+                    <span>{{ program.programName }}</span>
                   </div>
                 </div>
+              </div>
+
+              <h5 class="text-primary-blue mb-3" *ngIf="getSelectedDepartmentDetails()">
+                التخصصات
+              </h5>
+              <div class="divisions-list mb-4" *ngIf="getSelectedDepartmentDetails()">
+                <div>{{ getSelectedDepartmentDetails()?.content }}</div>
               </div>
             </div>
 
@@ -101,116 +96,121 @@
             <div *ngSwitchCase="'vision-mission'" class="tab-pane content-padding">
               <div class="row">
                 <div class="col-md-6">
-                  <div class="vision-section mb-4">
-                    <h4 class="text-primary-blue mb-3">
-                      <i class="pi pi-eye me-2"></i>الرؤية
-                    </h4>
-                    <p class="vision-text">{{ selectedDepartment.vision }}</p>
-                  </div>
+                  <h4 class="text-primary-blue mb-3">
+                    <i class="pi pi-eye me-2"></i>الرؤية
+                  </h4>
+                  <p class="vision-text">{{ selectedDepartment.vision }}</p>
                 </div>
                 <div class="col-md-6">
-                  <div class="mission-section mb-4">
-                    <h4 class="text-primary-blue mb-3">
-                      <i class="pi pi-compass me-2"></i>الرسالة
-                    </h4>
-                    <p class="mission-text">{{ selectedDepartment.mission }}</p>
-                  </div>
+                  <h4 class="text-primary-blue mb-3">
+                    <i class="pi pi-compass me-2"></i>الرسالة
+                  </h4>
+                  <p class="mission-text">{{ selectedDepartment.mission }}</p>
                 </div>
               </div>
 
-              <div class="objectives-section">
-                <h4 class="text-primary-blue mb-3">
-                  <i class="pi pi-flag me-2"></i>أهداف القسم
-                </h4>
-                <div class="objectives-list">
-                  <div *ngFor="let objective of selectedDepartment.objectives; let i = index"
-                       class="objective-item">
-                    <div class="objective-number">{{ i + 1 }}</div>
-                    <div class="objective-text">{{ objective }}</div>
-                  </div>
+              <h4 class="text-primary-blue mb-3">
+                <i class="pi pi-flag me-2"></i>أهداف القسم
+              </h4>
+              <div class="objectives-list">
+                <div *ngFor="let goal of selectedDepartment.goals; let i = index" class="objective-item">
+                  <div class="objective-number">{{ i + 1 }}</div>
+                  <div class="objective-text">{{ goal.goalName }}</div>
                 </div>
               </div>
             </div>
 
             <!-- Head of Department Tab -->
             <div *ngSwitchCase="'head'" class="tab-pane content-padding">
-              <div class="head-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-user me-2"></i>رئيس القسم
-                </h4>
-
-                <div class="head-profile">
-                  <div class="row align-items-center">
-                    <div class="col-md-3">
-                      <div class="head-image-placeholder">
-                        <i class="pi pi-user"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-9">
-                      <h5 class="text-primary-blue mb-2">{{ selectedDepartment.headOfDepartment.name }}</h5>
-                      <p class="text-muted mb-2">{{ selectedDepartment.headOfDepartment.title }}</p>
-                      <p class="mb-2"><strong>الدرجة العلمية:</strong> {{ selectedDepartment.headOfDepartment.academicRank }}</p>
-                      <p class="mb-2"><strong>التخصص:</strong> {{ selectedDepartment.headOfDepartment.specialization }}</p>
-                      <p class="mb-2" *ngIf="selectedDepartment.headOfDepartment.email">
-                        <strong>البريد الإلكتروني:</strong>
-                        <a [href]="'mailto:' + selectedDepartment.headOfDepartment.email">
-                          {{ selectedDepartment.headOfDepartment.email }}
-                        </a>
-                      </p>
-                      <p class="mb-3" *ngIf="selectedDepartment.headOfDepartment.office">
-                        <strong>المكتب:</strong> {{ selectedDepartment.headOfDepartment.office }}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div *ngIf="selectedDepartment.headOfDepartment.bio" class="head-bio mt-4">
-                    <h6 class="text-primary-blue mb-2">السيرة الذاتية</h6>
-                    <p>{{ selectedDepartment.headOfDepartment.bio }}</p>
-                  </div>
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-user me-2"></i>رئيس القسم
+              </h4>
+              <div *ngIf="getDepartmentLeader() as leader" class="staff-card">
+                <div class="staff-avatar">
+                  <i class="pi pi-user"></i>
+                </div>
+                <div class="staff-info">
+                  <h6 class="staff-name">{{ leader.memberName }}</h6>
+                  <p class="staff-specialization">رئيس القسم</p>
                 </div>
               </div>
             </div>
 
             <!-- Staff Members Tab -->
             <div *ngSwitchCase="'staff'" class="tab-pane content-padding">
-              <div class="staff-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-users me-2"></i>أعضاء هيئة التدريس
-                </h4>
-
-                <!-- Staff by Academic Rank -->
-                <div class="staff-by-rank">
-                  <div *ngFor="let rank of getUniqueAcademicRanks()" class="rank-section mb-4">
-                    <h5 class="rank-title text-secondary mb-3">{{ rank }}</h5>
-                    <div class="row">
-                      <div class="col-md-6 col-lg-4 mb-3" *ngFor="let staff of getStaffByAcademicRank(rank)">
-                        <div class="staff-card">
-                          <div class="staff-avatar">
-                            <i class="pi pi-user"></i>
-                          </div>
-                          <div class="staff-info">
-                            <h6 class="staff-name">{{ staff.name }}</h6>
-                            <p class="staff-specialization">{{ staff.specialization }}</p>
-                            <small class="staff-division" *ngIf="staff.division">{{ staff.division }}</small>
-                          </div>
-                        </div>
-                      </div>
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-users me-2"></i>أعضاء هيئة التدريس
+              </h4>
+              <div class="row">
+                <div class="col-md-6 col-lg-4 mb-3" *ngFor="let staff of getDepartmentStaff()">
+                  <div class="staff-card">
+                    <div class="staff-avatar">
+                      <i class="pi pi-user"></i>
                     </div>
-                  </div>
-                </div>
-
-                <!-- Staff Summary -->
-                <div class="staff-summary mt-4">
-                  <div class="row">
-                    <div class="col-md-6" *ngFor="let division of getUniqueDivisions()">
-                      <div class="division-summary">
-                        <h6 class="text-primary-blue">{{ division }}</h6>
-                        <p class="text-muted">{{ getStaffByDivision(division).length }} عضو هيئة تدريس</p>
-                      </div>
+                    <div class="staff-info">
+                      <h6 class="staff-name">{{ staff.memberName }}</h6>
+                      <p class="staff-specialization">عضو</p>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <!-- Services Tab -->
+            <div *ngSwitchCase="'services'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-cog me-2"></i>الخدمات المقدمة
+              </h4>
+              <div class="row">
+                @for (service of getDepartmentServicesById(); track service.name) {
+                  <div class="col-12 mb-4">
+                    <div class="staff-card">
+                      <div class="staff-avatar">
+                        <i class="pi pi-cog"></i>
+                      </div>
+                      <div class="staff-info mb-2">
+                        <h6 class="staff-name">{{ service.name }}</h6>
+                        <p class="staff-specialization mb-2">{{ service.category }}</p>
+                        <small class="text-muted d-block mb-1">
+                     {{ service.duration }}
+                        </small>
+                        @if (service.fees > 0) {
+                          <small class="text-muted d-block mb-1">
+                           {{ service.fees }} جنيه
+                          </small>
+                        }
+                        <small class="text-muted d-block mb-1">
+                         {{ service.details }}
+                        </small>
+                        <small class="text-muted d-block mb-1">
+               {{ service.isOnline ? 'متاح عبر الإنترنت' : 'غير متاح عبر الإنترنت' }}
+                        </small>
+                        <small class="text-muted d-block mb-2">
+                          {{ service.contactPerson }} - {{ service.contactPhone }}
+                        </small>
+                        <div class="service-actions">
+                          @if (service.applicationUrl) {
+                            <a [href]="service.applicationUrl" target="_blank" class="btn btn-primary-custom btn-sm me-1">
+                              <i class="pi pi-external-link"></i>
+                            </a>
+                          }
+                          @if (service.downloadUrl) {
+                            <a [href]="service.downloadUrl" target="_blank" class="btn btn-secondary-custom btn-sm">
+                              <i class="pi pi-download"></i>
+                            </a>
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+              @if (getDepartmentServicesById().length === 0) {
+                <div class="text-center text-muted">
+                  <i class="pi pi-info-circle" style="font-size: 3rem;"></i>
+                  <p class="mt-2">لا توجد خدمات متاحة حالياً لهذا القسم</p>
+                </div>
+              }
             </div>
 
           </div>
@@ -223,6 +223,3 @@
         <h4 class="text-muted mt-3">اختر قسمًا</h4>
         <p class="text-muted">اختر قسمًا من القائمة الجانبية لعرض تفاصيله.</p>
       </div>
-    </div>
-  </div>
-</div>

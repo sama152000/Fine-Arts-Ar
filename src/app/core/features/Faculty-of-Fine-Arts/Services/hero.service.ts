@@ -1,47 +1,37 @@
 import { Injectable } from '@angular/core';
-import { HeroContent } from '../model/hero.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, map } from 'rxjs';
+import { environment } from '../../../../../environments/environment';
+import { HeroApiResponse, HeroContent, HeroSection } from '../model/hero.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HeroService {
+  private heroUrl = environment.apiUrl + 'herosections/getall';
 
-  getHeroContent(): HeroContent {
-    return {
-      autoplay: true,
-      autoplayInterval: 5000,
-      slides: [
-        {
-          id: 1,
-          imageUrl: './assets/slide1.png',
-          title: 'كلية الفنون الجميلة – جامعة الأقصر',
-          subtitle: 'إبداع يصنع المستقبل',
-          description: 'نوفّر بيئة تعليمية تمزج بين الإبداع والتراث وعلوم الفن الحديثة، لإعداد فنانين قادرين على تشكيل مجتمع بصري أفضل.',
-          ctaText: 'اعرف المزيد',
-          ctaUrl: '/about',
-          active: true
-        },
-        {
-          id: 2,
-          imageUrl: './assets/slide2.png',
-          title: 'إلهام التميز الفني',
-          subtitle: 'حيث يلتقي التراث بالابتكار',
-          description: 'تجمع برامجنا بين التقنيات الفنية الكلاسيكية والفنون الرقمية المعاصرة، مما يعزز الإبداع والمهارة التقنية لدى كل طالب.',
-          ctaText: 'استكشف البرامج',
-          ctaUrl: '/departments',
-          active: false
-        },
-        {
-          id: 3,
-          imageUrl: './assets/slide3.jpg',
-          title: 'معارض وفعاليات ثقافية',
-          subtitle: 'عرض إبداعات الطلاب',
-          description: 'توفر المعارض والورش والفعاليات الثقافية منصات لعرض إنجازات الطلاب الفنية والتواصل مع المجتمع الفني.',
-          ctaText: 'عرض الفعاليات',
-          ctaUrl: '/events',
-          active: false
+  constructor(private http: HttpClient) {}
+
+  getHeroContent(): Observable<HeroContent> {
+    return this.http.get<HeroApiResponse>(this.heroUrl).pipe(
+      map(res => {
+        if (res.success) {
+          const slides = res.data.map(item => ({
+            id: item.id,
+            title: item.title,
+            subtitle: item.subTitle,
+            description: item.description,
+            isActive: item.isActive,
+            imageUrl: item.heroAttachments.length > 0 ? item.heroAttachments[0].url : ''
+          }));
+          return {
+            slides,
+            autoplay: true,
+            autoplayInterval: 5000
+          } as HeroContent;
         }
-      ]
-    };
+        return { slides: [] };
+      })
+    );
   }
 }

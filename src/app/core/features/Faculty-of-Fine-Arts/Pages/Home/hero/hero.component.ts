@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeroService } from '../../../Services/hero.service';
 import { HeroContent, HeroSlide } from '../../../model/hero.model';
@@ -10,7 +10,7 @@ import { HeroContent, HeroSlide } from '../../../model/hero.model';
   templateUrl: './hero.component.html',
   styleUrls: ['./hero.component.css']
 })
-export class HeroComponent implements OnInit {
+export class HeroComponent implements OnInit, OnDestroy {
   heroContent: HeroContent = { slides: [] };
   currentSlideIndex = 0;
   autoplayInterval: any;
@@ -18,10 +18,12 @@ export class HeroComponent implements OnInit {
   constructor(private heroService: HeroService) {}
 
   ngOnInit() {
-    this.heroContent = this.heroService.getHeroContent();
-    if (this.heroContent.autoplay) {
-      this.startAutoplay();
-    }
+    this.heroService.getHeroContent().subscribe(content => {
+      this.heroContent = content;
+      if (this.heroContent.autoplay) {
+        this.startAutoplay();
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -37,17 +39,24 @@ export class HeroComponent implements OnInit {
   }
 
   nextSlide() {
-    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.heroContent.slides.length;
+    if (this.heroContent.slides.length > 0) {
+      this.currentSlideIndex = (this.currentSlideIndex + 1) % this.heroContent.slides.length;
+    }
   }
 
   prevSlide() {
-    this.currentSlideIndex = this.currentSlideIndex === 0 
-      ? this.heroContent.slides.length - 1 
-      : this.currentSlideIndex - 1;
+    if (this.heroContent.slides.length > 0) {
+      this.currentSlideIndex =
+        this.currentSlideIndex === 0
+          ? this.heroContent.slides.length - 1
+          : this.currentSlideIndex - 1;
+    }
   }
 
   goToSlide(index: number) {
-    this.currentSlideIndex = index;
+    if (index >= 0 && index < this.heroContent.slides.length) {
+      this.currentSlideIndex = index;
+    }
   }
 
   getCurrentSlide(): HeroSlide | undefined {

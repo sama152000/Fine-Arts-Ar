@@ -16,11 +16,11 @@
                (click)="selectSector(sector)">
             <div class="department-info">
               <div class="department-icon">
-                <i [class]="sector.icon"></i>
+                <i class="pi pi-sitemap"></i>
               </div>
               <div class="department-details">
-                <h6 class="department-name">{{ sector.name }}</h6>
-                <small class="text-muted">{{ sector.staffMembers.length }} عضو هيئة تدريس</small>
+                <h6 class="department-name">{{ sector.pageTitle }}</h6>
+                <small class="text-muted">{{ getSectorServicesById().length }} خدمة</small>
               </div>
             </div>
           </div>
@@ -38,11 +38,11 @@
             <div class="col-md-8">
               <div class="d-flex align-items-center mb-3 gap-3">
                 <div class="department-icon-large me-3">
-                  <i [class]="selectedSector.icon"></i>
+                  <i class="pi pi-sitemap"></i>
                 </div>
                 <div>
-                  <h2 class="text-primary-blue mb-1">{{ selectedSector.name }}</h2>
-                  <p class="text-muted mb-0">تأسس عام {{ selectedSector.establishedYear }}</p>
+                  <h2 class="text-primary-blue mb-1">{{ selectedSector.pageTitle }}</h2>
+                  <p class="text-muted mb-0">{{ selectedSector.subTitle }}</p>
                 </div>
               </div>
             </div>
@@ -71,147 +71,102 @@
 
             <!-- Overview Tab -->
             <div *ngSwitchCase="'overview'" class="tab-pane content-padding">
-              <div class="row">
-                <div class="col-md-12">
-                  <h4 class="text-primary-blue mb-3">نظرة عامة على القطاع</h4>
-                  <p class="lead mb-4">{{ selectedSector.description }}</p>
-
-                  <h5 class="text-primary-blue mb-3">الخدمات</h5>
-                  <div class="row mb-4" *ngIf="selectedSector.services">
-                    <div class="col-md-6 " *ngFor="let service of selectedSector.services">
-                      <div class="program-card gap-3">
-                        <i class="pi pi-check-circle text-accent-gold me-2 p-1"></i>
-                        <span>{{ service }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <h5 class="text-primary-blue mb-3" *ngIf="selectedSector.activities?.length">الأنشطة الرئيسية</h5>
-                  <div class="divisions-list mb-4" *ngIf="selectedSector.activities?.length">
-                    <div *ngFor="let activity of selectedSector.activities" class="division-item">
-                      <i class="pi pi-angle-right text-primary-blue me-2"></i>
-                      {{ activity }}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <h4 class="text-primary-blue mb-3">نظرة عامة على القطاع</h4>
+              <p class="lead mb-4">{{ selectedSector.about }}</p>
             </div>
 
             <!-- Vision & Mission Tab -->
             <div *ngSwitchCase="'vision-mission'" class="tab-pane content-padding">
               <div class="row">
                 <div class="col-md-6">
-                  <div class="vision-section mb-4">
-                    <h4 class="text-primary-blue mb-3">
-                      <i class="pi pi-eye me-2 p-1"></i>الرؤية
-                    </h4>
-                    <p class="vision-text">{{ selectedSector.vision }}</p>
-                  </div>
+                  <h4 class="text-primary-blue mb-3">
+                    <i class="pi pi-eye me-2 p-1"></i>الرؤية
+                  </h4>
+                  <p class="vision-text">{{ selectedSector.vision }}</p>
                 </div>
                 <div class="col-md-6">
-                  <div class="mission-section mb-4">
-                    <h4 class="text-primary-blue mb-3">
-                      <i class="pi pi-compass me-2 p-1"></i>الرسالة
-                    </h4>
-                    <p class="mission-text">{{ selectedSector.mission }}</p>
-                  </div>
+                  <h4 class="text-primary-blue mb-3">
+                    <i class="pi pi-compass me-2 p-1"></i>الرسالة
+                  </h4>
+                  <p class="mission-text">{{ selectedSector.mission }}</p>
                 </div>
               </div>
 
-              <div class="objectives-section">
-                <h4 class="text-primary-blue mb-3">
-                  <i class="pi pi-flag me-2"></i>أهداف القطاع
-                </h4>
-                <div class="objectives-list">
-                  <div *ngFor="let objective of selectedSector.objectives; let i = index"
-                       class="objective-item">
-                    <div class="objective-number">{{ i + 1 }}</div>
-                    <div class="objective-text">{{ objective }}</div>
-                  </div>
+              <h4 class="text-primary-blue mb-3">
+                <i class="pi pi-flag me-2"></i>أهداف القطاع
+              </h4>
+              <div class="objectives-list">
+                <div *ngFor="let goal of selectedSector.goals; let i = index" class="objective-item">
+                  <div class="objective-number">{{ i + 1 }}</div>
+                  <div class="objective-text">{{ goal.goalName }}</div>
                 </div>
               </div>
             </div>
 
             <!-- Head of Sector Tab -->
             <div *ngSwitchCase="'head'" class="tab-pane content-padding">
-              <div class="head-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-user me-2 p-1"></i>قيادة القطاع
-                </h4>
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-user me-2 p-1"></i>قيادة القطاع
+              </h4>
+            <div *ngIf="getSectorLeader() as leader" class="staff-card">
+  <div class="staff-avatar">
+    <i class="pi pi-user"></i>
+  </div>
+  <div class="staff-info">
+    <h6 class="staff-name">{{ leader.memberName }}</h6>
+    <p class="staff-specialization">رئيس القطاع</p>
+  </div>
+</div>
 
-                <div class="head-profile">
-                  <div class="row align-items-center">
-                    <div class="col-md-3">
-                      <div class="head-image-placeholder">
-                        <i class="pi pi-user"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-9">
-                      <h5 class="text-primary-blue mb-2">{{ selectedSector.headOfSector.name }}</h5>
-                      <p class="text-muted mb-2">{{ selectedSector.headOfSector.title }}</p>
-                      <p class="mb-2"><strong>الدرجة العلمية:</strong> {{ selectedSector.headOfSector.academicRank }}</p>
-                      <p class="mb-2"><strong>التخصص:</strong> {{ selectedSector.headOfSector.specialization }}</p>
-                      <p class="mb-2" *ngIf="selectedSector.headOfSector.email">
-                        <strong>البريد الإلكتروني:</strong>
-                        <a [href]="'mailto:' + selectedSector.headOfSector.email">
-                          {{ selectedSector.headOfSector.email }}
-                        </a>
-                      </p>
-                      <p class="mb-3" *ngIf="selectedSector.headOfSector.office">
-                        <strong>المكتب:</strong> {{ selectedSector.headOfSector.office }}
-                      </p>
-                    </div>
-                  </div>
+            </div>
 
-                  <div *ngIf="selectedSector.headOfSector.bio" class="head-bio mt-4">
-                    <h6 class="text-primary-blue mb-2">السيرة الذاتية</h6>
-                    <p>{{ selectedSector.headOfSector.bio }}</p>
+            <!-- Staff Members Tab -->
+            <div *ngSwitchCase="'staff'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-users me-2 p-1"></i>أعضاء هيئة التدريس
+              </h4>
+              <div class="row">
+                <div class="col-md-6 col-lg-4 mb-3" *ngFor="let staff of getSectorStaff()">
+                  <div class="staff-card">
+                    <div class="staff-avatar">
+                      <i class="pi pi-user"></i>
+                    </div>
+                    <div class="staff-info">
+                      <h6 class="staff-name">{{ staff.memberName }}</h6>
+                      <p class="staff-specialization">عضو</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Staff Members Tab -->
-            <div *ngSwitchCase="'staff'" class="tab-pane content-padding">
-              <div class="staff-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-users me-2 p-1"></i>أعضاء هيئة التدريس
-                </h4>
-
-                <!-- Staff by Academic Rank -->
-                <div class="staff-by-rank">
-                  <div *ngFor="let rank of getUniqueAcademicRanks()" class="rank-section mb-4">
-                    <h5 class="rank-title text-secondary mb-3">{{ rank }}</h5>
-                    <div class="row">
-                      <div class="col-md-6 col-lg-4 mb-3" *ngFor="let staff of getStaffByAcademicRank(rank)">
-                        <div class="staff-card">
-                          <div class="staff-avatar">
-                            <i class="pi pi-user"></i>
-                          </div>
-                          <div class="staff-info">
-                            <h6 class="staff-name">{{ staff.name }}</h6>
-                            <p class="staff-specialization">{{ staff.specialization }}</p>
-                            <small class="staff-division" *ngIf="staff.division">{{ staff.division }}</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+            <!-- Services Tab -->
+            <div *ngSwitchCase="'services'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-cog me-2 p-1"></i>الخدمات
+              </h4>
+              <div class="row">
+                <div class="col-md-6 mb-3" *ngFor="let service of getSectorServicesById()">
+                  <div class="program-card">
+                    <!-- <i class="pi pi-check-circle text-accent-gold me-2"></i> -->
+                    <span>{{ service.name }}</span>
+                    <p class="text-muted">{{ service.details }}</p>
                   </div>
                 </div>
-
-                <!-- Staff Summary -->
-                <div class="staff-summary mt-4">
-                  <div class="row">
-                    <div class="col-md-6" *ngFor="let division of getUniqueDivisions()">
-                      <div class="division-summary">
-                        <h6 class="text-primary-blue">{{ division }}</h6>
-                        <p class="text-muted">{{ getStaffByDivision(division).length }} عضو هيئة تدريس</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
+            </div>
+
+            <!-- News Tab -->
+            <div *ngSwitchCase="'news'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-bell me-2 p-1"></i>الأخبار
+              </h4>
+              <ul class="list-group">
+                <li class="list-group-item" style="cursor: pointer;" [routerLink]="['/news-details', post.postId]" *ngFor="let post of sectorPostsById">
+                  <i class="pi pi-angle-right text-primary-blue me-2"></i>
+                  {{ post.postName }}
+                </li>
+              </ul>
             </div>
 
           </div>

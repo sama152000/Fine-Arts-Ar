@@ -6,10 +6,10 @@
       <div class="col-md-8">
         <div class="contact-info d-flex flex-wrap gap-3">
           <span class="text-primary-custom gap-3">
-            <i class="fa fa-phone me-2 ms-1"></i>+20 88-1234567
+            <i class="fa fa-phone me-2 ms-1"></i>{{ contactInfo?.phone || '+20 88-1234567' }}
           </span>
           <span class="text-primary-custom">
-            <i class="fa fa-envelope me-2 ms-1"></i>info@fine.arts.edu.eg
+            <i class="fa fa-envelope me-2 ms-1"></i>{{ contactInfo?.email || 'info@fine.arts.edu.eg' }}
           </span>
         </div>
       </div>
@@ -58,7 +58,7 @@ English
       <div class="logo-container me-3">
         <div class="logo-placeholder bg-primary-blue text-white d-flex align-items-center justify-content-center">
           <!-- <i class="pi pi-palette" style="font-size: 2rem;"></i> -->
-           <img src="/assets/logo.png" alt="Faculty of Fine Arts Logo" style="width: 100%; height: 100%; object-fit: contain;">
+           <img [src]="logo?.url || '/assets/logo.png'" alt="Faculty of Fine Arts Logo" style="width: 100%; height: 100%; object-fit: contain;">
         </div>
       </div>
       <div class="brand-text">

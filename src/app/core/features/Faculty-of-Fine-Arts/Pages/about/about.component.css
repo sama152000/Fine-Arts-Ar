@@ -103,6 +103,7 @@
 
 .section-content {
   min-height: 500px;
+  padding: 2rem;
 }
 
 .content-text {
@@ -114,6 +115,20 @@
   margin-bottom: 1.5rem;
   color: var(--text-gray);
   text-align: justify;
+}
+
+.dean-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem 0;
+}
+
+.dean-photo {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-large);
+  box-shadow: var(--shadow-medium);
 }
 
 .section-image-container {

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Department, DepartmentTab } from '../../model/department.model';
-import { DepartmentService } from '../../Services/department.service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DepartmentsService } from '../../Services/department.service';
+import { Department, DepartmentTab, DepartmentDetail, DepartmentMember, DepartmentProgram, DepartmentService } from '../../model/department.model';
 
 @Component({
   selector: 'app-departments',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './departments.component.html',
   styleUrls: ['./departments.component.css'],
   changeDetection: ChangeDetectionStrategy.Default
@@ -15,62 +15,83 @@ import { DepartmentService } from '../../Services/department.service';
 export class DepartmentsComponent implements OnInit {
   departments: Department[] = [];
   selectedDepartment: Department | null = null;
-  tabs: DepartmentTab[] = [];
+
+  departmentDetails: DepartmentDetail[] = [];
+  departmentMembers: DepartmentMember[] = [];
+  departmentPrograms: DepartmentProgram[] = [];
+  departmentServices: DepartmentService[] = [];
+
+  tabs: DepartmentTab[] = [
+    { id: 'overview', label: 'نبذة عامة', icon: 'pi pi-info-circle', active: true },
+    { id: 'vision-mission', label: 'الرؤية & الرسالة', icon: 'pi pi-eye', active: false },
+    { id: 'head', label: 'رئيس القسم', icon: 'pi pi-user', active: false },
+    { id: 'staff', label: 'أعضاء القسم', icon: 'pi pi-users', active: false },
+    { id: 'services', label: 'الخدمات', icon: 'pi pi-cog', active: false }
+  ];
   activeTab: string = 'overview';
 
   constructor(
-    private departmentService: DepartmentService,
+    private departmentsService: DepartmentsService,
     private route: ActivatedRoute,
     private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
-  
   ngOnInit() {
-    this.departments = this.departmentService.getDepartments();
-    this.tabs = this.departmentService.getDepartmentTabs();
-    console.log('Departments fetched from service:', this.departments);
-    this.cdr.markForCheck();
-    
-    // First check snapshot params (works on initial navigation), then subscribe for changes
-    const snapshotId = this.route.snapshot.paramMap.get('id');
-    if (snapshotId) {
-      const department = this.departmentService.getDepartmentById(+snapshotId);
-      if (department) {
-        this.selectDepartment(department);
+    // تحميل الأقسام
+    this.departmentsService.getDepartments().subscribe(res => {
+      if (res.success) {
+        this.departments = res.data;
+        if (this.departments.length > 0) {
+          this.selectedDepartment = this.departments[0];
+        }
       }
-    } else if (this.departments.length > 0) {
-      // no id in route snapshot — select first department by default
-      this.selectDepartment(this.departments[0]);
-    }
+    });
 
-    // Also subscribe to params to handle later navigation changes
+    // تحميل تفاصيل الأقسام
+    this.departmentsService.getDepartmentDetails().subscribe(res => {
+      if (res.success) {
+        this.departmentDetails = res.data;
+      }
+    });
+
+    // تحميل أعضاء الأقسام
+    this.departmentsService.getDepartmentMembers().subscribe(res => {
+      if (res.success) {
+        this.departmentMembers = res.data;
+      }
+    });
+
+    // تحميل البرامج التابعة للأقسام
+    this.departmentsService.getDepartmentPrograms().subscribe(res => {
+      if (res.success) {
+        this.departmentPrograms = res.data;
+      }
+    });
+
+    // تحميل الخدمات التابعة للأقسام
+    this.departmentsService.getDepartmentServices().subscribe(res => {
+      if (res.success) {
+        this.departmentServices = res.data;
+      }
+    });
+
+    // تحديد القسم من الـ route
     this.route.params.subscribe(params => {
       const id = params['id'];
-      console.log('Route params changed:', params);
       if (id) {
-        const department = this.departmentService.getDepartmentById(+id);
-        if (department) {
-          this.selectDepartment(department);
-        } else {
-          console.warn('Department id from route not found:', id);
-        }
-      } else if (!id && this.selectedDepartment) {
-        // if params cleared but we have a selected department, restore the URL to keep the id
-        console.log('Route params cleared, restoring URL for department:', this.selectedDepartment.id);
-        this.router.navigate(['/departments', this.selectedDepartment.id], { replaceUrl: true });
+        this.selectedDepartment = this.departments.find(d => d.id === id) ?? this.selectedDepartment;
       }
-      this.cdr.markForCheck();
     });
+
+    this.updateTabsActiveState();
+    this.cdr.markForCheck();
   }
 
   selectDepartment(department: Department) {
     this.selectedDepartment = department;
     this.activeTab = 'overview';
     this.updateTabsActiveState();
-    // ensure view updates after loading data
-
-    // Update URL without triggering navigation
     this.router.navigate(['/departments', department.id], { replaceUrl: true });
   }
 
@@ -78,15 +99,10 @@ export class DepartmentsComponent implements OnInit {
     this.activeTab = tabId;
     this.updateTabsActiveState();
     this.cdr.markForCheck();
-    console.log('selectTab called with:', tabId, 'activeTab is now:', this.activeTab);
   }
 
   isTabActive(tabId: string): boolean {
-    const result = this.activeTab === tabId;
-    if (result) {
-      console.log('Tab is active:', tabId, 'activeTab:', this.activeTab);
-    }
-    return result;
+    return this.activeTab === tabId;
   }
 
   private updateTabsActiveState() {
@@ -95,27 +111,47 @@ export class DepartmentsComponent implements OnInit {
     });
   }
 
-  getStaffByAcademicRank(rank: string) {
-    if (!this.selectedDepartment) return [];
-    return this.selectedDepartment.staffMembers.filter(staff => staff.academicRank === rank);
+  // جلب تفاصيل القسم المحدد
+  getSelectedDepartmentDetails(): DepartmentDetail | undefined {
+    if (!this.selectedDepartment) return undefined;
+    return this.departmentDetails.find(d => d.departmentId === this.selectedDepartment!.id);
   }
 
-  getStaffByDivision(division: string) {
+  // جلب أعضاء القسم المحدد
+  getSelectedDepartmentMembers(): DepartmentMember[] {
     if (!this.selectedDepartment) return [];
-    return this.selectedDepartment.staffMembers.filter(staff => staff.division === division);
+    return this.departmentMembers.filter(m => m.departmentId === this.selectedDepartment!.id);
   }
 
-  getUniqueAcademicRanks() {
-    if (!this.selectedDepartment) return [];
-    const ranks = this.selectedDepartment.staffMembers.map(staff => staff.academicRank);
-    return [...new Set(ranks)].sort();
+  // جلب رئيس القسم
+  getDepartmentLeader(): DepartmentMember | undefined {
+    return this.getSelectedDepartmentMembers().find(m => m.isLeader);
   }
 
-  getUniqueDivisions() {
+  // جلب باقي الأعضاء
+  getDepartmentStaff(): DepartmentMember[] {
+    return this.getSelectedDepartmentMembers().filter(m => !m.isLeader);
+  }
+
+  // جلب البرامج التابعة للقسم
+  getDepartmentProgramsById(): DepartmentProgram[] {
     if (!this.selectedDepartment) return [];
-    const divisions = this.selectedDepartment.staffMembers
-      .map(staff => staff.division)
-      .filter(division => division !== undefined && division !== null);
-    return [...new Set(divisions as string[])];
+    return this.departmentPrograms.filter(p => p.departmentId === this.selectedDepartment!.id);
+  }
+
+  // جلب الخدمات التابعة للقسم
+  getDepartmentServicesById(): DepartmentService[] {
+    if (!this.selectedDepartment) return [];
+    return this.departmentServices.filter(s => s.departmentId === this.selectedDepartment!.id);
+  }
+
+  // جلب عدد أعضاء القسم
+  getDepartmentMemberCount(department: Department): number {
+    return this.departmentMembers.filter(m => m.departmentId === department.id).length;
+  }
+
+  // التنقل إلى صفحة البرنامج
+  navigateToProgram(programId: string) {
+    this.router.navigate(['/programs', programId]);
   }
 }

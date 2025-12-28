@@ -8,10 +8,11 @@ export interface MenuItem {
 }
 
 export interface DropdownItem {
-  id?: string; 
+  id?: string;
   label: string;
   url: string;
   icon?: string;
+  dropdownItems?: DropdownItem[];
 }
 
 export interface SocialLink {

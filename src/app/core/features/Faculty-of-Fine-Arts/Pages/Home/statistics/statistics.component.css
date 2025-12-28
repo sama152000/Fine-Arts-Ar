@@ -74,7 +74,7 @@
   display: inline-block;
   width: 80px;
   height: 80px;
-  background: linear-gradient(135deg, var(--primary-red), var(--primary-red));
+  background: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -83,14 +83,10 @@
   transition: all 0.3s ease;
 }
 
-.stat-frame:hover .stat-icon-wrapper {
-  transform: scale(1.1);
-  background: linear-gradient(135deg, var(--primary-red), var(--accent-gold));
-}
 
 .stat-icon {
   font-size: 2rem;
-  color: white;
+  color: var(--primary-blue);
 }
 
 .stat-number-container {

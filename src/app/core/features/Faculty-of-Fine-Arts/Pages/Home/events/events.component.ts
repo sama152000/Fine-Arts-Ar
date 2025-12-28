@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { EventsService } from '../../../Services/event.service';
-import { EventItem } from '../../../model/event.model';
+import { NewsService } from '../../../Services/news.service';
+import { Post } from '../../../model/news.model';
 
 @Component({
   selector: 'app-events',
@@ -12,50 +12,34 @@ import { EventItem } from '../../../model/event.model';
   styleUrls: ['./events.component.css']
 })
 export class EventsComponent implements OnInit {
-  events: EventItem[] = [];
+  events: Post[] = [];
 
-  constructor(private eventService: EventsService) {}
+  constructor(private newsService: NewsService) {}
 
   ngOnInit() {
-    this.events = this.eventService.getAllEvents().slice(0, 4);
+    this.newsService.getPosts().subscribe(res => {
+      if (res.success) {
+        // فلترة البوستات بحيث تعرض فقط الفاعليات (الاحداث)
+        this.events = res.data
+          .filter(post => post.postCategories.some(c => c.categoryName === 'الاحداث'))
+          .slice(0, 4); // عرض أول 4 فعاليات فقط
+      }
+    });
   }
 
-  getCategoryClass(category: string): string {
-    switch (category) {
-      case 'exhibition': return 'category-exhibition';
-      case 'workshop': return 'category-workshop';
-      case 'seminar': return 'category-seminar';
-      case 'conference': return 'category-conference';
-      default: return 'category-default';
-    }
-  }
-
-  getCategoryIcon(category: string): string {
-    switch (category) {
-      case 'exhibition': return 'pi pi-image';
-      case 'workshop': return 'pi pi-wrench';
-      case 'seminar': return 'pi pi-comments';
-      case 'conference': return 'pi pi-users';
-      default: return 'pi pi-calendar';
-    }
-  }
-
-  formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('en-US', {
+  formatDate(date: string): string {
+    return new Intl.DateTimeFormat('ar-EG', {
       weekday: 'short',
       year: 'numeric',
       month: 'short',
       day: 'numeric'
-    }).format(date);
+    }).format(new Date(date));
   }
 
-  formatTime(time: string): string {
-    return time;
-  }
-
-  getDaysUntilEvent(eventDate: Date): number {
+  // لو عايز تحسب الأيام المتبقية للفعالية
+  getDaysUntilEvent(eventDate: string): number {
     const today = new Date();
-    const diffTime = eventDate.getTime() - today.getTime();
+    const diffTime = new Date(eventDate).getTime() - today.getTime();
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
 }

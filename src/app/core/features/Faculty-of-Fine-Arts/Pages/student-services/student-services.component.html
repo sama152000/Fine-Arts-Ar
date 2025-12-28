@@ -16,11 +16,11 @@
                (click)="selectService(service)">
             <div class="department-info">
               <div class="department-icon">
-                <i [class]="service.icon"></i>
+                <i [class]="service.iconPath"></i>
               </div>
               <div class="department-details">
-                <h6 class="department-name">{{ service.name }}</h6>
-                <small class="text-muted">{{ service.staffMembers.length }} عضو هيئة تدريس</small>
+                <h6 class="department-name">{{ service.title }}</h6>
+                <small class="text-muted" *ngIf="service.isActive">نشطة</small>
               </div>
             </div>
           </div>
@@ -35,19 +35,15 @@
         <!-- Service Header -->
         <div class="department-header art-card mb-4">
           <div class="row align-items-center content-padding">
-            <div class="col-md-8">
+            <div class="col-md-12">
               <div class="d-flex align-items-center mb-3 gap-3">
                 <div class="department-icon-large me-3">
-                  <i [class]="selectedService.icon"></i>
+                  <i [class]="selectedService.iconPath"></i>
                 </div>
                 <div>
-                  <h2 class="text-primary-blue mb-1">{{ selectedService.name }}</h2>
-                  <p class="text-muted mb-0">تأسست عام {{ selectedService.establishedYear }}</p>
+                  <h2 class="text-primary-blue mb-1">{{ selectedService.title }}</h2>
                 </div>
               </div>
-            </div>
-            <div class="col-md-4 text-md-end">
-              <div class="department-stats"></div>
             </div>
           </div>
         </div>
@@ -75,164 +71,7 @@
                 <div class="col-md-12">
                   <h4 class="text-primary-blue mb-3">نظرة عامة على الخدمة</h4>
                   <p class="lead mb-4">{{ selectedService.description }}</p>
-
-                  <h5 class="text-primary-blue mb-3">الخدمات المتاحة</h5>
-                  <div class="row mb-4" *ngIf="selectedService.services">
-                    <div class="col-md-6" *ngFor="let service of selectedService.services">
-                      <div class="program-card">
-                        <i class="pi pi-check-circle text-accent-gold me-2 p-1"></i>
-                        <span>{{ service }}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <h5 class="text-primary-blue mb-3" *ngIf="selectedService.procedures?.length">إجراءات الخدمة</h5>
-                  <div class="divisions-list mb-4" *ngIf="selectedService.procedures?.length">
-                    <div *ngFor="let procedure of selectedService.procedures; let i = index" class="division-item">
-                      <i class="pi pi-angle-right text-primary-blue me-2"></i>
-                      <strong>الخطوة {{ i + 1 }}:</strong> {{ procedure }}
-                    </div>
-                  </div>
-
-                  <!-- Service Information -->
-                  <div class="service-info mt-4" *ngIf="selectedService.workingHours || selectedService.location">
-                    <div class="row">
-                      <div class="col-md-6" *ngIf="selectedService.workingHours">
-                        <div class="info-card">
-                          <h6 class="text-primary-blue mb-2">
-                            <i class="pi pi-clock me-2"></i>ساعات العمل
-                          </h6>
-                          <p class="mb-0">{{ selectedService.workingHours }}</p>
-                        </div>
-                      </div>
-                      <div class="col-md-6" *ngIf="selectedService.location">
-                        <div class="info-card">
-                          <h6 class="text-primary-blue mb-2">
-                            <i class="pi pi-map-marker me-2"></i>الموقع
-                          </h6>
-                          <p class="mb-0">{{ selectedService.location }}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
-            </div>
-
-            <!-- Vision & Mission Tab -->
-            <div *ngSwitchCase="'vision-mission'" class="tab-pane content-padding">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="vision-section mb-4">
-                    <h4 class="text-primary-blue mb-3">
-                      <i class="pi pi-eye me-2 p-1"></i>الرؤية
-                    </h4>
-                    <p class="vision-text">{{ selectedService.vision }}</p>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="mission-section mb-4">
-                    <h4 class="text-primary-blue mb-3">
-                      <i class="pi pi-compass me-2 p-1"></i>الرسالة
-                    </h4>
-                    <p class="mission-text">{{ selectedService.mission }}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="objectives-section">
-                <h4 class="text-primary-blue mb-3">
-                  <i class="pi pi-flag me-2"></i>أهداف الخدمة
-                </h4>
-                <div class="objectives-list">
-                  <div *ngFor="let objective of selectedService.objectives; let i = index" 
-                       class="objective-item">
-                    <div class="objective-number">{{ i + 1 }}</div>
-                    <div class="objective-text">{{ objective }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Head of Service Tab -->
-            <div *ngSwitchCase="'head'" class="tab-pane content-padding">
-              <div class="head-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-user me-2"></i>قيادة الخدمة
-                </h4>
-                
-                <div class="head-profile">
-                  <div class="row align-items-center">
-                    <div class="col-md-3">
-                      <div class="head-image-placeholder">
-                        <i class="pi pi-user"></i>
-                      </div>
-                    </div>
-                    <div class="col-md-9">
-                      <h5 class="text-primary-blue mb-2">{{ selectedService.headOfService.name }}</h5>
-                      <p class="text-muted mb-2">{{ selectedService.headOfService.title }}</p>
-                      <p class="mb-2"><strong>الوظيفة:</strong> {{ selectedService.headOfService.position }}</p>
-                      <p class="mb-2"><strong>التخصص:</strong> {{ selectedService.headOfService.specialization }}</p>
-                      <p class="mb-2" *ngIf="selectedService.headOfService.email">
-                        <strong>البريد الإلكتروني:</strong> 
-                        <a [href]="'mailto:' + selectedService.headOfService.email">
-                          {{ selectedService.headOfService.email }}
-                        </a>
-                      </p>
-                      <p class="mb-3" *ngIf="selectedService.headOfService.office">
-                        <strong>المكتب:</strong> {{ selectedService.headOfService.office }}
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div *ngIf="selectedService.headOfService.bio" class="head-bio mt-4">
-                    <h6 class="text-primary-blue mb-2">السيرة الذاتية</h6>
-                    <p>{{ selectedService.headOfService.bio }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Staff Members Tab -->
-            <div *ngSwitchCase="'staff'" class="tab-pane content-padding">
-              <div class="staff-section">
-                <h4 class="text-primary-blue mb-4">
-                  <i class="pi pi-users me-2"></i>أعضاء هيئة التدريس
-                </h4>
-
-                <!-- Staff by Position -->
-                <div class="staff-by-rank">
-                  <div *ngFor="let position of getUniquePositions()" class="rank-section mb-4">
-                    <h5 class="rank-title text-secondary mb-3">{{ position }}</h5>
-                    <div class="row">
-                      <div class="col-md-6 col-lg-4 mb-3" *ngFor="let staff of getStaffByPosition(position)">
-                        <div class="staff-card">
-                          <div class="staff-avatar">
-                            <i class="pi pi-user"></i>
-                          </div>
-                          <div class="staff-info">
-                            <h6 class="staff-name">{{ staff.name }}</h6>
-                            <p class="staff-specialization">{{ staff.specialization }}</p>
-                            <small class="staff-division" *ngIf="staff.division">{{ staff.division }}</small>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Staff Summary -->
-                <div class="staff-summary mt-4">
-                  <div class="row">
-                    <div class="col-md-6" *ngFor="let division of getUniqueDivisions()">
-                      <div class="division-summary">
-                        <h6 class="text-primary-blue">{{ division }}</h6>
-                        <p class="text-muted">{{ getStaffByDivision(division).length }} عضو هيئة تدريس</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
               </div>
             </div>
 
@@ -248,3 +87,4 @@
       </div>
     </div>
   </div>
+</div>

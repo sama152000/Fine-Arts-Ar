@@ -3,16 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { NewsService } from '../../../Services/news.service';
-import { EventsService } from '../../../Services/event.service';
-import { AnnouncementsService } from '../../../Services/announcements.service';
-import { ArticlesService } from '../../../Services/articles.service';
-import { NewsItem } from '../../../model/news.model';
-import { EventItem } from '../../../model/event.model';
-import { AnnouncementItem } from '../../../model/announcement.model';
-import { ArticleItem } from '../../../model/article.model';
-
-type ContentItem = NewsItem | EventItem | AnnouncementItem | ArticleItem;
-type ContentType = 'news' | 'event' | 'announcement' | 'article';
+import { Post } from '../../../model/news.model';
 
 @Component({
   selector: 'app-news-details',
@@ -22,125 +13,109 @@ type ContentType = 'news' | 'event' | 'announcement' | 'article';
   styleUrls: ['./news-details.component.css']
 })
 export class NewsDetailsComponent implements OnInit {
-  contentItem: ContentItem | null = null;
-  relatedItems: ContentItem[] = [];
-  contentType: ContentType = 'news';
+  post: Post | null = null;
+  relatedPosts: Post[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private newsService: NewsService,
-    private eventsService: EventsService,
-    private announcementsService: AnnouncementsService,
-    private articlesService: ArticlesService
+    private newsService: NewsService
   ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      const id = +params['id'];
-      this.route.queryParams.subscribe(queryParams => {
-        this.contentType = queryParams['type'] || 'news';
-        this.loadContent(id);
-      });
+      const id = params['id'];
+      this.loadPost(id);
     });
   }
 
-  loadContent(id: number) {
-    let item: ContentItem | undefined;
-
-    switch (this.contentType) {
-      case 'news':
-        item = this.newsService.getNewsById(id);
-        break;
-      case 'event':
-        item = this.eventsService.getEventById(id);
-        break;
-      case 'announcement':
-        item = this.announcementsService.getAnnouncementById(id);
-        break;
-      case 'article':
-        item = this.articlesService.getArticleById(id);
-        break;
-    }
-
-    if (item) {
-      this.contentItem = item;
-      this.loadRelatedItems();
-    } else {
-      this.router.navigate(['/news-list']);
-    }
+  // تحميل البوست من الـ API (خبر أو حدث أو مؤتمر)
+  loadPost(id: string) {
+    this.newsService.getPosts().subscribe(res => {
+      if (res.success) {
+        const found = res.data.find(p => p.id === id);
+        if (found) {
+          this.post = found;
+          this.loadRelatedPosts();
+        } else {
+          this.router.navigate(['/news-list']);
+        }
+      }
+    });
   }
 
-  loadRelatedItems() {
-    if (!this.contentItem || !this.contentItem.relatedItems) {
-      return;
-    }
-
-    // Load related items from all services
-    const allItems: ContentItem[] = [
-      ...this.newsService.getAllNews(),
-      ...this.eventsService.getAllEvents(),
-      ...this.announcementsService.getAllAnnouncements(),
-      ...this.articlesService.getAllArticles()
-    ];
-
-    this.relatedItems = allItems.filter(item => 
-      this.contentItem!.relatedItems!.includes(item.id) && 
-      item.id !== this.contentItem!.id
-    ).slice(0, 5);
+  // تحميل العناصر المرتبطة (من نفس الفئة)
+  loadRelatedPosts() {
+    if (!this.post) return;
+    this.newsService.getPosts().subscribe(res => {
+      if (res.success) {
+        this.relatedPosts = res.data
+          .filter(p =>
+            p.postCategories.some(c =>
+              this.post!.postCategories.some(pc => pc.categoryName === c.categoryName)
+            ) && p.id !== this.post!.id
+          )
+          .slice(0, 5);
+      }
+    });
   }
 
   goBack() {
     this.location.back();
   }
 
-  goToTab(tab: string) {
-    this.router.navigate(['/news-list'], { 
-      queryParams: { tab: tab }
-    });
-  }
-
-  navigateToRelated(item: ContentItem) {
-    this.router.navigate(['/news-details', item.id], { 
-      queryParams: { type: item.category }
-    });
-  }
-
-  formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('en-GB', {
+  formatDate(date: string): string {
+    return new Intl.DateTimeFormat('ar-EG', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
-    }).format(date);
+    }).format(new Date(date));
   }
 
-  formatTime(time: string): string {
-    return time;
+  // ✅ دوال خاصة بالأحداث
+  isEvent(post: Post): boolean {
+    return post.postCategories.some(c => c.categoryName === 'الاحداث');
   }
 
-  isEventItem(item: ContentItem): item is EventItem {
-    return item.category === 'event';
+  // لو البوست حدث ممكن نعرض تفاصيل إضافية (لو موجودة في الـ content أو حقول مستقبلية)
+  getEventDetails(post: Post): string {
+    if (this.isEvent(post)) {
+      return `تفاصيل الفعالية: ${post.content.slice(0, 150)}...`;
+    }
+    return '';
   }
 
   getCategoryIcon(category: string): string {
-    const icons = {
-      'news': 'pi pi-book',
-      'event': 'pi pi-calendar',
-      'announcement': 'pi pi-megaphone',
-      'article': 'pi pi-file-edit'
+    const icons: Record<string, string> = {
+      'الأخبار': 'pi pi-book',
+      'الاحداث': 'pi pi-calendar',
+      'المؤتمرات': 'pi pi-megaphone'
     };
-    return icons[category as keyof typeof icons] || 'pi pi-info';
+    return icons[category] || 'pi pi-info';
   }
 
   getCategoryColor(category: string): string {
-    const colors = {
-      'news': 'text-primary-blue',
-      'event': 'text-accent-gold',
-      'announcement': 'text-primary-red',
-      'article': 'text-secondary'
+    const colors: Record<string, string> = {
+      'الأخبار': 'text-primary-blue',
+      'الاحداث': 'text-accent-gold',
+      'المؤتمرات': 'text-primary-red'
     };
-    return colors[category as keyof typeof colors] || 'text-primary-blue';
+    return colors[category] || 'text-primary-blue';
+  }
+
+  // التنقل لبوست مرتبط
+  navigateToRelated(item: Post) {
+    this.router.navigate(['/news-details', item.id], {
+      queryParams: { category: item.postCategories[0]?.categoryName ?? 'الأخبار' }
+    });
+  }
+
+  // التنقل لصفحة الفئة
+  goToTab(category: string) {
+    this.router.navigate(['/news-list'], {
+      queryParams: { tab: category }
+    });
   }
 }

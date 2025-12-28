@@ -9,6 +9,8 @@ import { StudentServicesComponent } from './core/features/Faculty-of-Fine-Arts/P
 import { NewsListComponent } from './core/features/Faculty-of-Fine-Arts/Pages/news-list/news-list.component';
 import { NewsDetailsComponent } from './core/features/Faculty-of-Fine-Arts/Pages/news-list/news-details/news-details.component';
 import { ContactComponent } from './core/features/Faculty-of-Fine-Arts/Pages/contact/contact.component';
+import { CentersComponent } from './core/features/Faculty-of-Fine-Arts/Pages/centers/centers.component';
+import { ProgramsComponent } from './core/features/Faculty-of-Fine-Arts/Pages/programs/programs.component';
 export const routes: Routes = [
 
 
@@ -30,7 +32,10 @@ export const routes: Routes = [
   { path: 'student-services/:id', component: StudentServicesComponent },
    { path: 'news-list', component: NewsListComponent },
       { path: 'news-details/:id', component: NewsDetailsComponent },
-      { path: 'contact', component: ContactComponent }
-    
+      { path: 'contact', component: ContactComponent },
+     { path: 'centers', component: CentersComponent },
+      { path: 'centers/:id', component: CentersComponent },
+      { path: 'programs', component: ProgramsComponent },
+      { path: 'programs/:id', component: ProgramsComponent },
     ]}
 ];

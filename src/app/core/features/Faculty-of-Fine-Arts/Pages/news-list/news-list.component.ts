@@ -2,16 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NewsService } from '../../Services/news.service';
-import { EventsService } from '../../Services/event.service';
-import { AnnouncementsService } from '../../Services/announcements.service';
-import { ArticlesService } from '../../Services/articles.service';
-import { NewsItem } from '../../model/news.model';
-import { EventItem } from '../../model/event.model';
-import { AnnouncementItem } from '../../model/announcement.model';
-import { ArticleItem } from '../../model/article.model';
-
-type ContentItem = NewsItem | EventItem | AnnouncementItem | ArticleItem;
-type TabType = 'all' | 'news' | 'event' | 'announcement' | 'article';
+import { Post } from '../../model/news.model'; // الموديل الجديد اللي يطابق الـ API
 
 @Component({
   selector: 'app-news-list',
@@ -21,69 +12,50 @@ type TabType = 'all' | 'news' | 'event' | 'announcement' | 'article';
   styleUrls: ['./news-list.component.css']
 })
 export class NewsListComponent implements OnInit {
-  activeTab: TabType = 'all';
-  allContent: ContentItem[] = [];
-  filteredContent: ContentItem[] = [];
+  activeTab: string = 'الكل';
+  posts: Post[] = [];
+  filteredPosts: Post[] = [];
 
-  tabs = [
-    { id: 'all' as TabType, label: 'الكل', icon: 'pi pi-list' },
-    { id: 'news' as TabType, label: 'الاخبار', icon: 'pi pi-book' },
-    { id: 'event' as TabType, label: 'الفاعليات', icon: 'pi pi-calendar' },
-    { id: 'announcement' as TabType, label: 'الاعلانات', icon: 'pi pi-megaphone' },
-    { id: 'article' as TabType, label: 'المقالات', icon: 'pi pi-file-edit' }
-  ];
+  // الفئات اللي هنفلتر بيها
+  categories = ['الكل', 'الأخبار', 'الاحداث', 'المؤتمرات'];
 
-  constructor(
-    private newsService: NewsService,
-    private eventsService: EventsService,
-    private announcementsService: AnnouncementsService,
-    private articlesService: ArticlesService,
-    private router: Router
-  ) {}
+  constructor(private newsService: NewsService, private router: Router) {}
 
   ngOnInit() {
-    this.loadAllContent();
-    this.filterContent();
-  }
-
-  loadAllContent() {
-    const news = this.newsService.getAllNews();
-    const events = this.eventsService.getAllEvents();
-    const announcements = this.announcementsService.getAllAnnouncements();
-    const articles = this.articlesService.getAllArticles();
-
-    this.allContent = [...news, ...events, ...announcements, ...articles]
-      .sort((a, b) => b.publishDate.getTime() - a.publishDate.getTime());
-  }
-
-  selectTab(tabId: TabType) {
-    this.activeTab = tabId;
-    this.filterContent();
-  }
-
-  filterContent() {
-    if (this.activeTab === 'all') {
-      this.filteredContent = this.allContent;
-    } else {
-      this.filteredContent = this.allContent.filter(item => item.category === this.activeTab);
-    }
-  }
-
-  navigateToDetails(item: ContentItem) {
-    this.router.navigate(['/news-details', item.id], { 
-      queryParams: { type: item.category }
+    // تحميل الأخبار من الـ API
+    this.newsService.getPosts().subscribe(res => {
+      if (res.success) {
+        this.posts = res.data;
+        this.filteredPosts = this.posts; // افتراضي: عرض الكل
+      }
     });
   }
 
-  formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('en-GB', {
+  // فلترة حسب الفئة
+  filterByCategory(category: string) {
+    this.activeTab = category;
+    if (category === 'الكل') {
+      this.filteredPosts = this.posts;
+    } else {
+      this.filteredPosts = this.posts.filter(post =>
+        post.postCategories.some(c => c.categoryName === category)
+      );
+    }
+  }
+
+  // التنقل لصفحة التفاصيل
+  navigateToDetails(post: Post) {
+    this.router.navigate(['/news-details', post.id], { 
+      queryParams: { category: post.postCategories[0]?.categoryName }
+    });
+  }
+
+  // تنسيق التاريخ للعرض
+  formatDate(date: string): string {
+    return new Intl.DateTimeFormat('ar-EG', {
       day: '2-digit',
       month: 'short',
       year: 'numeric'
-    }).format(date);
-  }
-
-  isEventItem(item: ContentItem): item is EventItem {
-    return item.category === 'event';
+    }).format(new Date(date));
   }
 }

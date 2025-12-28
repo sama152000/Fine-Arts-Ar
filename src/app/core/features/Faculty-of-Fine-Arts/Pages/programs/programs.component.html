@@ -1,0 +1,167 @@
+<div class="container-fluid py-4">
+  <div class="row">
+    <!-- Sidebar -->
+    <div class="col-lg-3 col-md-4">
+      <div class="departments-sidebar art-card">
+        <div class="sidebar-header content-padding">
+          <h5 class="text-primary-blue mb-0">
+            <i class="pi pi-bookmark me-2"></i>
+            البرامج
+          </h5>
+        </div>
+        <div class="sidebar-content">
+          <div *ngFor="let program of programs" 
+               class="department-item"
+               [class.active]="selectedProgram?.id === program.id"
+               (click)="selectProgram(program)">
+            <div class="department-info">
+              <div class="department-icon">
+                <i class="pi pi-bookmark"></i>
+              </div>
+              <div class="department-details">
+                <!-- اسم البرنامج من الـ API -->
+                <h6 class="department-name">{{ program.pageTitle }}</h6>
+                <!-- عدد الأعضاء من programMembers -->
+                <small class="text-muted">
+                  {{ getProgramMemberCount(program) }} عضو
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-lg-9 col-md-8">
+      <div class="department-content" *ngIf="selectedProgram">
+        
+        <!-- Program Header -->
+        <div class="department-header art-card mb-4">
+          <div class="row align-items-center content-padding">
+            <div class="col-md-8">
+              <div class="d-flex align-items-center mb-3 gap-3">
+                <div class="department-icon-large me-3">
+                  <i class="pi pi-bookmark"></i>
+                </div>
+                <div>
+                  <!-- اسم البرنامج -->
+                  <h2 class="text-primary-blue mb-1">{{ selectedProgram.pageTitle }}</h2>
+                  <!-- الاسم الإنجليزي -->
+                  <!-- <p class="text-muted mb-0">{{ selectedProgram.programTitleEn }}</p> -->
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 text-md-end">
+              <div class="department-stats"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="department-tabs mb-4">
+          <div class="tabs-container">
+            <div *ngFor="let tab of tabs" 
+                 class="tab-item"
+                 [class.active]="tab.active"
+                 (click)="selectTab(tab.id)">
+              <i [class]="tab.icon" class="me-2"></i>
+              {{ tab.label }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content art-card">
+          <div [ngSwitch]="activeTab">
+
+            <!-- Overview Tab -->
+            <div *ngSwitchCase="'overview'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-3">نظرة عامة على البرنامج</h4>
+              <p class="lead mb-4">{{ selectedProgram.about }}</p>
+            </div>
+
+            <!-- Vision & Mission Tab -->
+            <div *ngSwitchCase="'vision-mission'" class="tab-pane content-padding">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="vision-section mb-4">
+                    <h4 class="text-primary-blue mb-3">
+                      <i class="pi pi-eye me-2 p-1"></i>الرؤية
+                    </h4>
+                    <p class="vision-text">{{ selectedProgram.vision }}</p>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mission-section mb-4">
+                    <h4 class="text-primary-blue mb-3">
+                      <i class="pi pi-compass me-2 p-1"></i>الرسالة
+                    </h4>
+                    <p class="mission-text">{{ selectedProgram.mission }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="objectives-section">
+                <h4 class="text-primary-blue mb-3">
+                  <i class="pi pi-flag me-2"></i>أهداف البرنامج
+                </h4>
+                <div class="objectives-list">
+                  <div *ngFor="let goal of selectedProgram.goals; let i = index"
+                       class="objective-item">
+                    <div class="objective-number">{{ i + 1 }}</div>
+                    <div class="objective-text">{{ goal.goalName }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Head of Program Tab -->
+            <div *ngSwitchCase="'head'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-user me-2 p-1"></i>قيادة البرنامج
+              </h4>
+              <div *ngIf="getProgramLeader() as leader" class="staff-card">
+                <div class="staff-avatar">
+                  <i class="pi pi-user"></i>
+                </div>
+                <div class="staff-info">
+                  <h6 class="staff-name">{{ leader.memberName }}</h6>
+                  <p class="staff-specialization">رئيس البرنامج</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Staff Tab -->
+            <div *ngSwitchCase="'staff'" class="tab-pane content-padding">
+              <h4 class="text-primary-blue mb-4">
+                <i class="pi pi-users me-2 p-1"></i>أعضاء البرنامج
+              </h4>
+              <div class="row">
+                <div class="col-md-6 col-lg-4 mb-3" *ngFor="let member of getProgramStaff()">
+                  <div class="staff-card">
+                    <div class="staff-avatar">
+                      <i class="pi pi-user"></i>
+                    </div>
+                    <div class="staff-info">
+                      <h6 class="staff-name">{{ member.memberName }}</h6>
+                      <p class="staff-specialization">عضو</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- No Program Selected -->
+      <div *ngIf="!selectedProgram" class="no-selection art-card content-padding text-center">
+        <i class="pi pi-bookmark text-muted" style="font-size: 4rem;"></i>
+        <h4 class="text-muted mt-3">اختر برنامجاً</h4>
+        <p class="text-muted">اختر برنامجاً من القائمة الجانبية لعرض تفاصيله.</p>
+      </div>
+    </div>
+  </div>
+</div>

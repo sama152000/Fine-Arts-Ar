@@ -1,39 +1,9 @@
 export interface StudentService {
-  id: number;
-  name: string;
+  id: string;
+  title: string;
   description: string;
-  imageUrl: string;
-  icon: string;
-  establishedYear: number;
-  vision: string;
-  mission: string;
-  objectives: string[];
-  headOfService: {
-    name: string;
-    title: string;
-    position: string;
-    specialization: string;
-    email?: string;
-    office?: string;
-    bio?: string;
-  };
-  staffMembers: ServiceStaffMember[];
-  divisions?: string[];
-  services?: string[];
-  procedures?: string[];
-  requirements?: string[];
-  workingHours?: string;
-  location?: string;
-}
-
-export interface ServiceStaffMember {
-  id: number;
-  name: string;
-  position: string;
-  specialization: string;
-  division?: string;
-  email?: string;
-  office?: string;
+  iconPath: string;   // مثال: "pi pi-book"
+  isActive: boolean;
 }
 
 export interface ServiceTab {
@@ -41,4 +11,13 @@ export interface ServiceTab {
   label: string;
   icon: string;
   active: boolean;
+}
+
+export interface StudentServiceApiResponse {
+  success: boolean;
+  data: StudentService[];
+  message: string;
+  errors: any[];
+  statusCode: number;
+  timestamp: string;
 }

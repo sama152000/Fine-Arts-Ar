@@ -17,10 +17,7 @@ export class StudentServicesComponent implements OnInit {
   activeTab = 'overview';
   
   tabs: ServiceTab[] = [
-    { id: 'overview', label: 'نيذه عامة', icon: 'pi pi-info-circle', active: true },
-    { id: 'vision-mission', label: 'الروية & الرسالة', icon: 'pi pi-eye', active: false },
-    { id: 'head', label: 'رئيس الخدمة', icon: 'pi pi-user', active: false },
-    { id: 'staff', label: 'اعضاء هيئة التدريس', icon: 'pi pi-users', active: false }
+    { id: 'overview', label: 'تفاصيل الخدمة', icon: 'pi pi-info-circle', active: true },
   ];
 
   constructor(
@@ -31,15 +28,20 @@ export class StudentServicesComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.studentServices = this.studentServicesService.getStudentServices();
-    
-    // Check for service ID in route params
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        const serviceId = parseInt(params['id']);
-        this.selectedService = this.studentServicesService.getStudentServiceById(serviceId) ?? null;
-      } else if (this.studentServices.length > 0) {
-        this.selectedService = this.studentServices[0];
+    // جلب البيانات من الـ API
+    this.studentServicesService.getStudentServices().subscribe(res => {
+      if (res.success) {
+        this.studentServices = res.data;
+
+        // اختيار أول خدمة أو الخدمة حسب الـ route param
+        this.route.params.subscribe(params => {
+          if (params['id']) {
+            const serviceId = params['id'];
+            this.selectedService = this.studentServices.find(s => s.id === serviceId) ?? null;
+          } else if (this.studentServices.length > 0) {
+            this.selectedService = this.studentServices[0];
+          }
+        });
       }
     });
   }
@@ -53,26 +55,5 @@ export class StudentServicesComponent implements OnInit {
     this.activeTab = tabId;
     this.tabs.forEach(tab => tab.active = tab.id === tabId);
     this.cdr.detectChanges();
-  }
-
-  getUniquePositions(): string[] {
-    if (!this.selectedService) return [];
-    const positions = this.selectedService.staffMembers.map(staff => staff.position);
-    return [...new Set(positions)];
-  }
-
-  getStaffByPosition(position: string) {
-    if (!this.selectedService) return [];
-    return this.selectedService.staffMembers.filter(staff => staff.position === position);
-  }
-
-  getUniqueDivisions(): string[] {
-    if (!this.selectedService || !this.selectedService.divisions) return [];
-    return this.selectedService.divisions;
-  }
-
-  getStaffByDivision(division: string) {
-    if (!this.selectedService) return [];
-    return this.selectedService.staffMembers.filter(staff => staff.division === division);
   }
 }

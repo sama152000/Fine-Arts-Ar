@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SectorsService } from '../../Services/sectors.service';
-import { Sector, SectorTab } from '../../model/sector.model';
+import { Sector, SectorTab, SectorService, SectorPost, SectorMember } from '../../model/sector.model';
 
 @Component({
   selector: 'app-sectors',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './sectors.component.html',
   styleUrls: ['./sectors.component.css']
 })
@@ -15,12 +15,18 @@ export class SectorsComponent implements OnInit {
   sectors: Sector[] = [];
   selectedSector: Sector | null = null;
   activeTab = 'overview';
-  
+
+  sectorServices: SectorService[] = [];
+  sectorPosts: SectorPost[] = [];
+  sectorMembers: SectorMember[] = [];
+
   tabs: SectorTab[] = [
     { id: 'overview', label: 'نبذه عامة', icon: 'pi pi-info-circle', active: true },
     { id: 'vision-mission', label: 'الرؤية & الرسالة', icon: 'pi pi-eye', active: false },
     { id: 'head', label: 'رئيس القطاع', icon: 'pi pi-user', active: false },
-    { id: 'staff', label: 'اعضائ هيئه التدريس', icon: 'pi pi-users', active: false }
+    { id: 'staff', label: ' هيئة التدريس', icon: 'pi pi-users', active: false },
+    { id: 'services', label: 'الخدمات', icon: 'pi pi-cog', active: false },   // ✅ جديد
+    { id: 'news', label: 'الأخبار', icon: 'pi pi-bell', active: false }       // ✅ جديد
   ];
 
   constructor(
@@ -30,13 +36,42 @@ export class SectorsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.sectors = this.sectorsService.getSectors();
-    
-    // Check for sector ID in route params
+    // تحميل القطاعات
+    this.sectorsService.getSectors().subscribe(res => {
+      if (res.success) {
+        this.sectors = res.data;
+        if (this.sectors.length > 0) {
+          this.selectedSector = this.sectors[0];
+        }
+      }
+    });
+
+    // تحميل الخدمات
+    this.sectorsService.getSectorServices().subscribe(res => {
+      if (res.success) {
+        this.sectorServices = res.data;
+      }
+    });
+
+    // تحميل الأخبار
+    this.sectorsService.getSectorPosts().subscribe(res => {
+      if (res.success) {
+        this.sectorPosts = res.data;
+      }
+    });
+
+    // تحميل الأعضاء
+    this.sectorsService.getSectorMembers().subscribe(res => {
+      if (res.success) {
+        this.sectorMembers = res.data;
+      }
+    });
+
+    // تحديد القطاع من الـ route
     this.route.params.subscribe(params => {
       if (params['id']) {
-        const sectorId = parseInt(params['id']);
-        this.selectedSector = this.sectorsService.getSectorById(sectorId) ?? null;
+        const sectorId = params['id'];
+        this.selectedSector = this.sectors.find(s => s.id === sectorId) ?? null;
       } else if (this.sectors.length > 0) {
         this.selectedSector = this.sectors[0];
       }
@@ -53,24 +88,31 @@ export class SectorsComponent implements OnInit {
     this.tabs.forEach(tab => tab.active = tab.id === tabId);
   }
 
-  getUniqueAcademicRanks(): string[] {
+  // جلب الخدمات الخاصة بالقطاع المحدد
+  getSectorServicesById(): SectorService[] {
     if (!this.selectedSector) return [];
-    const ranks = this.selectedSector.staffMembers.map(staff => staff.academicRank);
-    return [...new Set(ranks)];
+    return this.sectorServices.filter(s => s.sectorId === this.selectedSector!.id);
   }
 
-  getStaffByAcademicRank(rank: string) {
+  // جلب الأخبار الخاصة بالقطاع المحدد
+  get sectorPostsById(): SectorPost[] {
     if (!this.selectedSector) return [];
-    return this.selectedSector.staffMembers.filter(staff => staff.academicRank === rank);
+    return this.sectorPosts.filter(p => p.sectorId === this.selectedSector!.id);
   }
 
-  getUniqueDivisions(): string[] {
-    if (!this.selectedSector || !this.selectedSector.divisions) return [];
-    return this.selectedSector.divisions;
-  }
+ // جلب رئيس القطاع
+getSectorLeader(): SectorMember | undefined {
+  if (!this.selectedSector) return undefined;
+  return this.sectorMembers.find(
+    (p: SectorMember) => p.sectorId === this.selectedSector!.id && p.isLeader
+  );
+}
 
-  getStaffByDivision(division: string) {
-    if (!this.selectedSector) return [];
-    return this.selectedSector.staffMembers.filter(staff => staff.division === division);
+  getSectorStaff():SectorMember[]{
+      if (!this.selectedSector) return [];
+    return this.sectorMembers.filter((p: SectorMember) => p.sectorId === this.selectedSector!.id );
+  
   }
 }
+
+
